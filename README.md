@@ -3,4 +3,4 @@
 	- Implementación de la barra lateral.
 
 	v0.2:
-	- Programando login con Facebook y parse.com
+	- Implementación login con parse.com

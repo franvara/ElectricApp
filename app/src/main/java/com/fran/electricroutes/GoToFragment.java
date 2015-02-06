@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 /**
  * Created by user on 26/08/2014.
  */
-public class Seccion2 extends Fragment {
+public class GoToFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.seccion2, container, false);
+        View rootView = inflater.inflate(R.layout.go_to, container, false);
 
         return rootView;
     }
