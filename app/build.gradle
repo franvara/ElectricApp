@@ -9,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 20
         versionCode 1
-        versionName "0.2dev"
+        versionName "0.3"
     }
     buildTypes {
         release {
@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile fileTree(dir: 'libs', include: 'Parse-*.jar')
+    compile 'com.google.android.gms:play-services:6.+'
 }
