@@ -3,7 +3,8 @@
 	- Implementación de la barra lateral.
 
 	v0.2:
-	- Implementación login con parse.com
+	- Implementación login con parse.com.
 
-	v0.3:
-	- Vista del mapa con Maker
+	v0.3b:
+	- Vista del mapa con Maker.
+	- Ruta manual.
