@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">ElectricRoutes</string>
-    <string name="menu_logout">Salir</string>
+    <string name="app_name">ElectricApp</string>
+    <string name="drawer_open">Menu opened</string>
+    <string name="drawer_close">Menu closed</string>
+    <string name="action_settings">Settings</string>
 
     <!-- Login -->
     <string name="login_tab">INICIAR SESIÓN</string>
@@ -21,28 +21,16 @@
     <string name="sign_up_button">Iniciar sesión</string>
     <string name="error_mismatched_passwords">introduzca la contraseña otra vez</string>
 
-
-    <!-- Content Description -->
-    <string name="desc_list_item_icon">Item Icon</string>
-
     <!-- Items names-->
     <string-array name="nav_drawer_items">
         <item >Inicio</item>
         <item >Ir a...</item>
-        <item >Mis destinos</item>
         <item >Mapa</item>
         <item >Garaje</item>
+        <item >Mis destinos</item>
         <item >Configuración</item>
     </string-array>
 
-    <!-- Items icons -->
-    <array name="nav_drawer_icons">
-        <item>@drawable/ic_whats_hot</item>
-        <item>@drawable/ic_whats_hot</item>
-        <item>@drawable/ic_people</item>
-        <item>@drawable/ic_photos</item>
-        <item>@drawable/ic_communities</item>
-        <item>@drawable/ic_communities</item>
-    </array>
-
+    <!-- GoToFragment -->
+    <string name="calculating">Calculando ruta...</string>
 </resources>
