@@ -2,6 +2,7 @@ package com.uc3m.electricapp;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -48,6 +48,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.parse.Parse;
+
+import garage.GarageActivity;
+
 public class MainActivity extends ActionBarActivity {
 
     private TextView txtPointB;
@@ -55,6 +59,9 @@ public class MainActivity extends ActionBarActivity {
     private TextView durationText;
     private ImageButton btnCalcRoute;
     private View clearDestino;
+
+    private TextView txtVehiculoSelect;
+    private ImageButton btnGarage;
 
     private LocationManager locManager;
 
@@ -69,13 +76,18 @@ public class MainActivity extends ActionBarActivity {
     private Location myLocation;
     private LocationListener locListener;
 
-    private Marker miVehiculo;
+    private Marker miVehiculoMarker;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //ParseCode
+        // Enable Local Datastore.
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "8TUN8Pt1gNbKn41u8GwyY8coY3SyCoG4OyvFSPj8", "ytW53W5QtsXzpsL4XM82qxwKxEB3TEAnJt7eMDpx");
 
         initUIElements();
 
@@ -133,6 +145,15 @@ public class MainActivity extends ActionBarActivity {
             }
         }
         );
+
+        btnGarage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, GarageActivity.class);
+                    startActivity(intent);
+                }
+             }
+        );
         initMap();
     }
 
@@ -141,6 +162,9 @@ public class MainActivity extends ActionBarActivity {
         btnCalcRoute = (ImageButton) findViewById(R.id.btnCalcRoute);
         txtPointB = (TextView) findViewById(R.id.inputDestino);
         clearDestino = findViewById(R.id.clearDestinoButton);
+
+        btnGarage = (ImageButton) findViewById(R.id.btnVehiculoSeleccion);
+        txtVehiculoSelect = (TextView) findViewById(R.id.txtVehiculoSeleccion);
 
         distanceText = (TextView) findViewById(R.id.campoDistance);
         durationText = (TextView) findViewById(R.id.campoDuration);
@@ -159,8 +183,8 @@ public class MainActivity extends ActionBarActivity {
 
             public void onLocationChanged(Location location) {
                 myLocation = location;
-                if(miVehiculo!=null)
-                    miVehiculo.setPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                if(miVehiculoMarker!=null)
+                    miVehiculoMarker.setPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
             }
 
             public void onProviderDisabled(String providerDisabled){}
@@ -189,7 +213,6 @@ public class MainActivity extends ActionBarActivity {
         LatLng puntoCentral = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(puntoCentral, 14));
     }
-
 
 
     @Override
@@ -283,7 +306,7 @@ public class MainActivity extends ActionBarActivity {
                     Toast.makeText(MainActivity.this,
                             "No existen resultados. Por favor, intente ajustar mejor la dirección de destino.",
                             Toast.LENGTH_LONG).show();
-                    miVehiculo = null;
+                    miVehiculoMarker = null;
                     progressDialog.dismiss();
                 }
 
@@ -401,7 +424,7 @@ public class MainActivity extends ActionBarActivity {
         mMap.addMarker(new MarkerOptions().position(latLngFin));
 
         // Añadimos un marcador con posición, título, icono y descripción.
-        miVehiculo = mMap.addMarker(new MarkerOptions().position(latLngInicio).title("Posición Actual")
+        miVehiculoMarker = mMap.addMarker(new MarkerOptions().position(latLngInicio).title("Posición Actual")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_car)));
         //.snippet("Subtítulo")
 

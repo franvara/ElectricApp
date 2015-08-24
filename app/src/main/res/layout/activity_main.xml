@@ -67,17 +67,44 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_below="@+id/searchInputSet"
         tools:context=".MainActivity"
-        android:layout_above="@+id/infoBox" />
+        android:layout_above="@+id/VehicleBox" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="vertical"
+        android:background="@android:color/holo_green_light"
+        android:id="@+id/VehicleBox"
+        android:layout_above="@+id/infoBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/txtVehiculoSeleccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selecciona un vehículo"/>
+
+        <ImageButton
+            android:id="@+id/btnVehiculoSeleccion"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/tools_equipment" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="vertical"
         android:background="@android:color/darker_gray"
+        android:id="@+id/infoBox"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/infoBox">
+        android:layout_alignParentStart="true">
 
         <TextView
             android:id="@+id/distance"
