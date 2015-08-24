@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -31,6 +32,10 @@ public class ListaVehiculoActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_vehiculo);
+
+        //Referencia a la nueva toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
+        setSupportActionBar(toolbar);
 
         //Habilitar el botón de retroceso de la barra de tareas
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -76,7 +81,7 @@ public class ListaVehiculoActivity extends ActionBarActivity {
                     map.setMarca((String) vehicle.get("Marca"));
                     map.setModelo((String) vehicle.get("Modelo"));
                     map.setImage(image.getUrl());
-                    map.setAutonomia((String) vehicle.get("Autonomia"));
+                    map.setAutonomia((int) vehicle.get("Autonomia"));
                     vehiclelist.add(map);
                 }
             } catch (ParseException e) {

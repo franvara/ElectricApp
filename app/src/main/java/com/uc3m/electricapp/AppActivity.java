@@ -3,22 +3,22 @@ package com.uc3m.electricapp;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
+import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,18 +50,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.parse.Parse;
+import com.parse.ParseUser;
 
 import garage.GarageActivity;
+import login.MainActivity;
 
-public class MainActivity extends ActionBarActivity {
+public class AppActivity extends AppCompatActivity {
 
     private TextView txtPointB;
     private TextView distanceText;
     private TextView durationText;
+    private TextView result;
     private View clearDestino;
 
     private TextView txtVehiculoSelect;
-    private ImageButton btnGarage;
+    private FloatingActionButton btnGarage;
 
     private LocationManager locManager;
 
@@ -78,16 +81,21 @@ public class MainActivity extends ActionBarActivity {
 
     private Marker miVehiculoMarker;
 
+    private String marca;
+    private String modelo;
+    private int autonomia;
+    private String distancia;
+    private int distNum;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //ParseCode
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "8TUN8Pt1gNbKn41u8GwyY8coY3SyCoG4OyvFSPj8", "ytW53W5QtsXzpsL4XM82qxwKxEB3TEAnJt7eMDpx");
+        //Referencia a la nueva toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
+        setSupportActionBar(toolbar);
 
         initUIElements();
 
@@ -116,7 +124,7 @@ public class MainActivity extends ActionBarActivity {
         btnGarage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, GarageActivity.class);
+                    Intent intent = new Intent(AppActivity.this, GarageActivity.class);
                     startActivity(intent);
                 }
              }
@@ -129,11 +137,14 @@ public class MainActivity extends ActionBarActivity {
         txtPointB = (TextView) findViewById(R.id.inputDestino);
         clearDestino = findViewById(R.id.clearDestinoButton);
 
-        btnGarage = (ImageButton) findViewById(R.id.btnVehiculoSeleccion);
+        btnGarage = (FloatingActionButton) findViewById(R.id.buttonGarage);
+        btnGarage.setBackgroundTintList(
+                getResources().getColorStateList(R.color.color_primary));
         txtVehiculoSelect = (TextView) findViewById(R.id.txtVehiculoSeleccion);
 
         distanceText = (TextView) findViewById(R.id.campoDistance);
         durationText = (TextView) findViewById(R.id.campoDuration);
+        result = (TextView) findViewById(R.id.resultado);
 
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
@@ -185,6 +196,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
+        actualizarPref();
+        calcularDistancia();
+
+        /*if(miVehiculoMarker!=null)
+            miVehiculoMarker.setPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));*/
     }
 
 
@@ -206,7 +222,7 @@ public class MainActivity extends ActionBarActivity {
         String pointB = txtPointB.getText().toString();
 
         if (pointB.equals("")) {
-            Toast.makeText(MainActivity.this, "Todos los campos son obligatorios", Toast.LENGTH_LONG).show();
+            Toast.makeText(AppActivity.this, "Todos los campos son obligatorios", Toast.LENGTH_LONG).show();
         } else {
             PeticionJSON peticion = new PeticionJSON();
             peticion.execute("http://maps.googleapis.com/maps/api/directions/json?origin="
@@ -222,8 +238,8 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(MainActivity.this);
-            progressDialog.setMessage(MainActivity.this.getString(R.string.calculating));
+            progressDialog = new ProgressDialog(AppActivity.this);
+            progressDialog.setMessage(AppActivity.this.getString(R.string.calculating));
             progressDialog.show();
         }
 
@@ -290,12 +306,14 @@ public class MainActivity extends ActionBarActivity {
                     //Acción
                     pintarRuta(latitudes, longitudes);
                 } else {
-                    Toast.makeText(MainActivity.this,
+                    Toast.makeText(AppActivity.this,
                             "No existen resultados. Por favor, intente ajustar mejor la dirección de destino.",
                             Toast.LENGTH_LONG).show();
                     miVehiculoMarker = null;
                     progressDialog.dismiss();
                 }
+
+                calcularDistancia();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -422,9 +440,38 @@ public class MainActivity extends ActionBarActivity {
         zoomToCoverAllMarkers(latLngList, mMap);
     }
 
+    public void actualizarPref(){
+        SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
+        marca = ficha.getString("marca", "null");
+
+        if(marca == "null"){
+            txtVehiculoSelect.setText("Seleccione un vehículo.");
+        }else {
+            modelo = ficha.getString("modelo", "null");
+
+            txtVehiculoSelect.setText(marca + " " + modelo);
+
+        }
+    }
+
+    public void calcularDistancia(){
+        distancia = distanceText.getText().toString();
+        if(marca != "null" && (!(distancia.equals("DISTANCIA")))){
+            SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
+            autonomia = ficha.getInt("autonomia", 0);
+
+            distNum = Integer.parseInt(distancia.replaceAll("[\\D]", ""));
+
+            result.setText(String.valueOf(distNum));
+
+
+        }
+
+    }
+
     public void ocultarTeclado(){
         InputMethodManager imm = (InputMethodManager) getSystemService(
-                MainActivity.this.INPUT_METHOD_SERVICE);
+                AppActivity.this.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
@@ -442,8 +489,10 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.log_out) {
+            ParseUser.getCurrentUser().logOut();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
             return true;
         }
 

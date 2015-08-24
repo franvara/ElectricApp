@@ -1,6 +1,6 @@
 package garage;
 
-public class Vehiculo {
+public class VehiculoGarage {
     private String idVehiculo;
     private String marca;
     private String modelo;

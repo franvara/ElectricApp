@@ -16,14 +16,14 @@ import com.uc3m.electricapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListViewAdapter extends BaseAdapter {
+public class GarageAdapter extends BaseAdapter {
 
     // Declare Variables
     Context context;
     LayoutInflater inflater;
     ImageLoader imageLoader;
-    private List<Vehiculo> vehiclelist = null;
-    private ArrayList<Vehiculo> arraylist;
+    private List<VehiculoGarage> garagelist = null;
+    private ArrayList<VehiculoGarage> arraylist;
 
     private String id;
     private String marca;
@@ -31,13 +31,13 @@ public class ListViewAdapter extends BaseAdapter {
     private int autonomia;
 
 
-    public ListViewAdapter(Context context,
-                           List<Vehiculo> vehiclelist) {
+    public GarageAdapter(Context context,
+                         List<VehiculoGarage> garagelist) {
         this.context = context;
-        this.vehiclelist = vehiclelist;
+        this.garagelist = garagelist;
         inflater = LayoutInflater.from(context);
-        this.arraylist = new ArrayList<Vehiculo>();
-        this.arraylist.addAll(vehiclelist);
+        this.arraylist = new ArrayList<VehiculoGarage>();
+        this.arraylist.addAll(garagelist);
         imageLoader = new ImageLoader(context);
     }
 
@@ -49,12 +49,12 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return vehiclelist.size();
+        return garagelist.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return vehiclelist.get(position);
+        return garagelist.get(position);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ListViewAdapter extends BaseAdapter {
         final ViewHolder holder;
         if (view == null) {
             holder = new ViewHolder();
-            view = inflater.inflate(R.layout.vehicle_card, null);
+            view = inflater.inflate(R.layout.garage_card, null);
             // Locate the TextViews in listview_item.xml
             holder.marca = (TextView) view.findViewById(R.id.marca);
             holder.modelo = (TextView) view.findViewById(R.id.modelo);
@@ -77,20 +77,20 @@ public class ListViewAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         // Set the results into TextViews
-        holder.marca.setText(vehiclelist.get(position).getMarca());
-        holder.modelo.setText(vehiclelist.get(position).getModelo());
+        holder.marca.setText(garagelist.get(position).getMarca());
+        holder.modelo.setText(garagelist.get(position).getModelo());
         // Set the results into ImageView
-        imageLoader.DisplayImage(vehiclelist.get(position).getImage(),
+        imageLoader.DisplayImage(garagelist.get(position).getImage(),
                 holder.image);
         // Listen for ListView Item Click
         view.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                id = vehiclelist.get(position).getIdVehiculo();
-                marca = vehiclelist.get(position).getMarca();
-                modelo = vehiclelist.get(position).getModelo();
-                autonomia = vehiclelist.get(position).getAutonomia();
+                /*id = garagelist.get(position).getIdVehiculo();
+                marca = garagelist.get(position).getMarca();
+                modelo = garagelist.get(position).getModelo();
+                autonomia = garagelist.get(position).getAutonomia();
 
                 //Cerramos la activity y retornamos el poder a la activity para que actúe
                 Intent i = ((Activity)context).getIntent();
@@ -103,7 +103,7 @@ public class ListViewAdapter extends BaseAdapter {
                 //Cerramos la pantalla indicando que ha ido bien
                 ((Activity)context).setResult(((Activity)context).RESULT_OK, i);
 
-                ((Activity)context).finish();
+                ((Activity)context).finish();*/
 
             }
         });

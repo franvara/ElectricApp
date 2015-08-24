@@ -1,12 +1,26 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!-- Destino -->
+    <include android:id="@+id/appbar"
+        layout="@layout/toolbar" />
 
+    <!--Sombra para versiones anteriores a Lollipop-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="@drawable/header_shadow">
+
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Destino -->
     <LinearLayout
         android:id="@+id/buscadorDestino"
         android:orientation="horizontal"
@@ -17,8 +31,7 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
-        android:focusableInTouchMode="true"
-        android:visibility="visible">
+        android:focusableInTouchMode="true">
 
         <LinearLayout
             android:layout_width="50dp"
@@ -28,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/imageViewBuscarMapa"
-                android:src="@drawable/ic_buscar"
+                android:src="@drawable/ic_action_search"
                 android:clickable="true"
                 android:background="@android:color/white"
                 android:padding="5dp"
@@ -68,7 +81,7 @@
                     android:layout_width="38dp"
                     android:layout_height="match_parent"
                     android:id="@+id/clearDestinoButton"
-                    android:src="@drawable/btn_borrar"
+                    android:src="@drawable/ic_action_cancel"
                     android:background="@android:color/white"
                     android:paddingRight="9dp"
                     android:clickable="true"
@@ -86,78 +99,107 @@
         android:layout_width="match_parent"
         android:layout_height="419dp"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_below="@+id/searchInputSet"
         tools:context=".MainActivity"
-        android:layout_above="@+id/VehicleBox" />
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:orientation="vertical"
-        android:background="@android:color/holo_green_light"
-        android:id="@+id/VehicleBox"
-        android:layout_above="@+id/infoBox"
+        android:layout_below="@+id/buscadorDestino"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true" />
 
-        <TextView
-            android:id="@+id/txtVehiculoSeleccion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Selecciona un vehículo"/>
-
-        <ImageButton
-            android:id="@+id/btnVehiculoSeleccion"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/tools_equipment" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@android:color/darker_gray"
+    <!--Info Box-->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:id="@+id/infoBox"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/map"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white">
 
-        <TextView
-            android:id="@+id/distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Distancia: "/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:layout_marginRight="0.5dp">
 
-        <TextView
-            android:id="@+id/campoDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/duration"
-            android:layout_toRightOf="@+id/distance"
-            android:layout_toEndOf="@+id/distance" />
+            <TextView
+                android:id="@+id/campoDistance"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="DISTANCIA"
+                android:textColor="@color/color_primary"/>
 
-        <TextView
-            android:id="@+id/duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Duración: "
-            android:layout_below="@+id/distance"/>
 
-        <TextView
-            android:id="@+id/campoDuration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/distance"
-            android:layout_toRightOf="@+id/duration"
-            android:layout_toEndOf="@+id/duration" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="0.5dp"
+            android:layout_marginRight="0.5dp">
+
+            <TextView
+                android:id="@+id/campoDuration"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="DURACIÓN"
+                android:textColor="@color/color_primary"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="0.5dp">
+
+            <TextView
+                android:id="@+id/txtVehiculoSeleccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Seleccione un vehículo"
+                android:textColor="@color/color_primary"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="RESULTADO"
+                android:id="@+id/resultado" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+        <!--Garage button-->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/buttonGarage"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/icon_garage"
+            app:fabSize="normal"
+            app:borderWidth="0dp"
+            app:layout_anchor="@id/infoBox"
+            app:layout_anchorGravity="bottom|right|end"
+            android:layout_alignBottom="@+id/map"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
 
     </RelativeLayout>
 
 
+    </FrameLayout>
 </LinearLayout>

@@ -1,58 +1,42 @@
 package garage;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.ListView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.uc3m.electricapp.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class GarageActivity extends ActionBarActivity {
 
-    private Button btnAnadirVehiculo;
-    private String miVehiculo;
-
-    private String marca;
-    private String modelo;
-    private String autonomia;
-    private TextView txtMarca;
-    private TextView txtModelo;
-    private TextView txtAutonomia;
-    private TextView txtCentral;
-    private ScrollView scroll;
-
+    // Declare Variables
+    ListView listview;
+    List<ParseObject> ob;
+    ProgressDialog mProgressDialog;
+    GarageAdapter adapter;
+    private List<VehiculoGarage> garagelist = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_garage);
 
-        btnAnadirVehiculo = (Button) findViewById(R.id.buttonAnadirVehiculo);
-
-
-        btnAnadirVehiculo.setOnClickListener(new View.OnClickListener() {
-                 @Override
-                 public void onClick(View v) {
-                     Intent intent = new Intent(GarageActivity.this, ListaVehiculoActivity.class);
-                     startActivityForResult(intent, 0);
-                 }
-             }
-        );
-
-        scroll = (ScrollView) findViewById(R.id.fichaTecnica);
-
-        txtMarca = (TextView) findViewById(R.id.textViewMarca);
-        txtModelo = (TextView) findViewById(R.id.textViewModelo);
-        txtAutonomia = (TextView) findViewById(R.id.textViewAutonomia);
-        txtCentral = (TextView) findViewById(R.id.textCentral);
-
+        //Referencia a la nueva toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
+        setSupportActionBar(toolbar);
 
         //Habilitar el botón de retroceso de la barra de tareas
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,63 +47,80 @@ public class GarageActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
+        // Execute RemoteDataTask AsyncTask
+        new RemoteDataTask().execute();
+    }
 
-        marca = ficha.getString("marca", "null");
-
-        if(marca == "null"){
-            txtCentral.setVisibility(View.VISIBLE);
-
-        }else{
-
-            txtCentral.setVisibility(View.GONE);
-
-            scroll.setVisibility(View.VISIBLE);
-
-            obtenerPreferencias();
+    // RemoteDataTask AsyncTask
+    private class RemoteDataTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Create a progressdialog
+            mProgressDialog = new ProgressDialog(GarageActivity.this);
+            // Set progressdialog title
+            mProgressDialog.setTitle("Garage");
+            // Set progressdialog message
+            mProgressDialog.setMessage("Cargando...");
+            mProgressDialog.setIndeterminate(false);
+            // Show progressdialog
+            mProgressDialog.show();
         }
 
-    }
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Create the array
+            garagelist = new ArrayList<VehiculoGarage>();
 
-    public void obtenerPreferencias(){
-        SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
-        marca = ficha.getString("marca", "null");
-        modelo = ficha.getString("modelo", "null");
-        autonomia = ficha.getString("autonomia", "null");
+                // Locate the class table named "Cars" in Parse.com
+                ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
+                        "Cars");
 
-        cambiarTexto();
-    }
+            try {
 
-    public void cambiarTexto(){
-        txtMarca.setText(marca);
-        txtModelo.setText(modelo);
-        txtAutonomia.setText(autonomia + " km");
-    }
+                query.whereEqualTo("objectId", "uVEV1bkIn5");
 
-    //Este método nos trae la información de para qué se llamó la actividad ListaVehiculoActivity,
-    //cuál fue el resultado ("OK" o "CANCELED"), y el intent que nos traerá la
-    //información que necesitamos de la segunda actividad.
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+                List<ParseObject> scoreList = query.find();
 
-        // Comprobamos si el resultado de la segunda actividad es "RESULT_OK".
-        if (resultCode == android.app.Activity.RESULT_OK) {
-            //Leemos los datos del nuevo alta y lanzamos el alta.
-            marca = data.getStringExtra("marca");
-            modelo = data.getStringExtra("modelo");
-            autonomia = data.getStringExtra("autonomia");
+                for (int i = 0; i < scoreList.size(); i++) {
+                    ParseObject row = scoreList.get(i);
 
-            cambiarTexto();
+                    // Locate images in imagen column
+                    ParseFile image = (ParseFile) row.get("image");
 
-            //Preferencias para controlar la publicidad
-            SharedPreferences prefs = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("marca", marca);
-            editor.putString("modelo", modelo);
-            editor.putString("autonomia", autonomia);
-            editor.commit();
+                    VehiculoGarage map = new VehiculoGarage();
+                    map.setIdVehiculo((String) row.getObjectId());
+                    map.setMarca((String) row.get("Marca"));
+                    map.setModelo((String) row.get("Modelo"));
+                    map.setImage(image.getUrl());
+                    map.setAutonomia((int) row.get("Autonomia"));
+                    garagelist.add(map);
+                }
 
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                CharSequence datos = "Error: " + e.getMessage();
+                Log.e("Controlador", "ObtenerAlergiasUsuario - " + datos);
+
+            }
+
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            // Locate the listview in listview_main.xml
+            listview = (ListView) findViewById(R.id.garagelist);
+            // Pass the results into ListViewAdapter.java
+            adapter = new GarageAdapter(GarageActivity.this,
+                    garagelist);
+            // Binds the Adapter to the ListView
+            listview.setAdapter(adapter);
+            // Close the progressdialog
+            mProgressDialog.dismiss();
         }
     }
 
@@ -134,4 +135,5 @@ public class GarageActivity extends ActionBarActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }
