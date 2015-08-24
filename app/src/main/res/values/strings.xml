@@ -1,36 +1,13 @@
 <resources>
     <string name="app_name">ElectricApp</string>
-    <string name="drawer_open">Menu opened</string>
-    <string name="drawer_close">Menu closed</string>
+
+    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-    <!-- Login -->
-    <string name="login_tab">INICIAR SESIÓN</string>
-    <string name="signup_tab">REGISTRARSE</string>
-    <string name="username">Nombre de usuario</string>
-    <string name="password">Contraseña</string>
-    <string name="password_again">Repita la contraseña</string>
-    <string name="error_intro">"Por favor, "</string>
-    <string name="error_blank_username">introduzca su nombre de usuario</string>
-    <string name="error_join">" e "</string>
-    <string name="error_blank_password">introduzca su contraseña</string>
-    <string name="error_end">.</string>
-    <string name="login_dialog_title">"Espere por favor"</string>
-    <string name="login_dialog_message">Iniciando sesión.  Por favor espere.</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="sign_up_button">Iniciar sesión</string>
-    <string name="error_mismatched_passwords">introduzca la contraseña otra vez</string>
+    <!-- Origen -->
+    <string name="destino">Destino</string>
 
-    <!-- Items names-->
-    <string-array name="nav_drawer_items">
-        <item >Inicio</item>
-        <item >Ir a...</item>
-        <item >Mapa</item>
-        <item >Garaje</item>
-        <item >Mis destinos</item>
-        <item >Configuración</item>
-    </string-array>
-
-    <!-- GoToFragment -->
     <string name="calculating">Calculando ruta...</string>
+
+
 </resources>

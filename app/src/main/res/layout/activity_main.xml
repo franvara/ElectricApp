@@ -1,29 +1,114 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/toolbar_default"
+    <LinearLayout
+        android:id="@+id/searchInputSet"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        />
+        android:background="@color/highlighted_text_material_dark">
 
-    <com.fran.electricapp.SlidingTabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="2dp"
-        android:background="@color/primary"/>
+        <!-- Destino -->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="3dp">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+            <AutoCompleteTextView
+                android:id="@+id/inputDestino"
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_alignParentTop="true"
+                android:hint="@string/destino"
+                android:imeOptions="actionSearch"
+                android:paddingBottom="3dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="42dp"
+                android:paddingTop="3dp"
+                android:singleLine="true"
+                android:layout_toStartOf="@+id/clearDestinoButton"
+                android:layout_toLeftOf="@+id/clearDestinoButton" />
+
+            <ImageView
+                android:id="@+id/clearDestinoButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="43dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_borrar"
+                android:visibility="invisible"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="43dp"/>
+
+
+            <ImageButton
+                android:id="@+id/btnCalcRoute"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/tools_equipment" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:layout_weight="1">
-    </android.support.v4.view.ViewPager>
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_below="@+id/searchInputSet"
+        tools:context=".MainActivity"
+        android:layout_above="@+id/infoBox" />
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:background="@android:color/darker_gray"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/infoBox">
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Distancia: "/>
+
+        <TextView
+            android:id="@+id/campoDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/duration"
+            android:layout_toRightOf="@+id/distance"
+            android:layout_toEndOf="@+id/distance" />
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Duración: "
+            android:layout_below="@+id/distance"/>
+
+        <TextView
+            android:id="@+id/campoDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/distance"
+            android:layout_toRightOf="@+id/duration"
+            android:layout_toEndOf="@+id/duration" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
