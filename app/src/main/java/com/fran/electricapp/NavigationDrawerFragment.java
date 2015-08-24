@@ -127,6 +127,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         items.add(new NavigationItem(names[1], getResources().getDrawable(R.drawable.ic_action_directions)));
         //Mapa
         items.add(new NavigationItem(names[2], getResources().getDrawable(R.drawable.ic_action_map)));
+        //Garaje
+        items.add(new NavigationItem(names[3], getResources().getDrawable(R.drawable.ic_action_map)));
         return items;
     }
 

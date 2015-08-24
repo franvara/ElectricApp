@@ -44,6 +44,11 @@
             android:label="@string/app_name"
             android:configChanges="screenSize|orientation|keyboard"/>
 
+        <activity
+            android:name=".ListActivity"
+            android:label="@string/app_name"
+            android:configChanges="screenSize|orientation|keyboard"/>
+
     </application>
 
 </manifest>

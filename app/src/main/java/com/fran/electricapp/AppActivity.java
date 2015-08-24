@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 
 public class AppActivity extends ActionBarActivity
@@ -24,8 +27,10 @@ public class AppActivity extends ActionBarActivity
     private Toolbar mToolbar;
 
     private String[] names;
+    private String garageUser;
     public double[] ArrayLatitudes;
     public double[] ArrayLongitudes;
+
 
 
     @Override
@@ -50,7 +55,7 @@ public class AppActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUserData(nameUser, "franvaracruz@gmail.com", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
 
         //Section Home by default
-        onNavigationDrawerItemSelected(1);
+        onNavigationDrawerItemSelected(3);
     }
 
     @Override
@@ -82,6 +87,13 @@ public class AppActivity extends ActionBarActivity
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, MyMapFragment.TAG).commit();
                 break;
 
+            case 3: //Garage
+                fragment = getFragmentManager().findFragmentByTag(GarageFragment.TAG);
+                if (fragment == null) {
+                    fragment = new GarageFragment();
+                }
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, GarageFragment.TAG).commit();
+                break;
 
             default:
                 //If there is no option, it displays a toast and it sent to home
@@ -148,5 +160,13 @@ public class AppActivity extends ActionBarActivity
 
     public double[] getArrayLongitudes() {
         return ArrayLongitudes;
+    }
+
+    public void setGarageUser(String garageUser) {
+        this.garageUser = garageUser;
+    }
+
+    public String getGarageUser() {
+        return garageUser;
     }
 }
