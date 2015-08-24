@@ -28,6 +28,7 @@ public class ListViewAdapter extends BaseAdapter {
     private String id;
     private String marca;
     private String modelo;
+    private String autonomia;
 
 
     public ListViewAdapter(Context context,
@@ -89,6 +90,7 @@ public class ListViewAdapter extends BaseAdapter {
                 id = vehiclelist.get(position).getIdVehiculo();
                 marca = vehiclelist.get(position).getMarca();
                 modelo = vehiclelist.get(position).getModelo();
+                autonomia = vehiclelist.get(position).getAutonomia();
 
                 //Cerramos la activity y retornamos el poder a la activity para que actúe
                 Intent i = ((Activity)context).getIntent();
@@ -96,6 +98,7 @@ public class ListViewAdapter extends BaseAdapter {
                 //Devolvemos los datos que ha introducido el usuario delegando la tarea
                 i.putExtra("marca", marca);
                 i.putExtra("modelo", modelo);
+                i.putExtra("autonomia", autonomia);
 
                 //Cerramos la pantalla indicando que ha ido bien
                 ((Activity)context).setResult(((Activity)context).RESULT_OK, i);

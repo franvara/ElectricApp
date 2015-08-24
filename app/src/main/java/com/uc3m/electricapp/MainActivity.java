@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +58,6 @@ public class MainActivity extends ActionBarActivity {
     private TextView txtPointB;
     private TextView distanceText;
     private TextView durationText;
-    private ImageButton btnCalcRoute;
     private View clearDestino;
 
     private TextView txtVehiculoSelect;
@@ -91,24 +91,12 @@ public class MainActivity extends ActionBarActivity {
 
         initUIElements();
 
-        txtPointB.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                clearDestino.setVisibility(View.INVISIBLE);
-                return false;
-            }
-        });
-
         clearDestino.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 txtPointB.setText("");
-                clearDestino.setVisibility(View.INVISIBLE);
             }
         });
-
-        txtPointB.addTextChangedListener(new TextWatcherOrigenDestino(clearDestino));
 
         comenzarLocalizacion();
 
@@ -117,34 +105,13 @@ public class MainActivity extends ActionBarActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 
-                    //Obtenemos la dirección A y B obtenida por el usuario.
-                    String pointA = myLocation.getLatitude() + " " + myLocation.getLongitude();
-                    String pointB = txtPointB.getText().toString();
-
-                    if (pointB.equals("")) {
-                        Toast.makeText(MainActivity.this, "Todos los campos son obligatorios", Toast.LENGTH_LONG).show();
-                    } else {
-                        PeticionJSON peticion = new PeticionJSON();
-                        peticion.execute("http://maps.googleapis.com/maps/api/directions/json?origin="
-                                + (pointA).replace(" ", "+") + "&destination=" +
-                                (pointB).replace(" ", "+") + "&sensor=false&mode=driving");
-                    }
-                    ocultarTeclado();
+                    busqueda();
 
                     return true;
                 }
                 return false;
             }
         });
-
-        //Se define un OnClickListener al botón de Calcular Ruta:
-        btnCalcRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        }
-        );
 
         btnGarage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -159,7 +126,6 @@ public class MainActivity extends ActionBarActivity {
 
     public void initUIElements(){
         //Se define un OnClickListener al botón de Calcular Ruta:
-        btnCalcRoute = (ImageButton) findViewById(R.id.btnCalcRoute);
         txtPointB = (TextView) findViewById(R.id.inputDestino);
         clearDestino = findViewById(R.id.clearDestinoButton);
 
@@ -226,7 +192,28 @@ public class MainActivity extends ActionBarActivity {
     protected void onStop() {
         super.onStop();
 
-        locManager.removeUpdates(locListener);
+        //locManager.removeUpdates(locListener);
+    }
+
+    public void busquedaLupa(View view){
+        busqueda();
+    }
+
+
+    public void busqueda(){
+        //Obtenemos la dirección A y B obtenida por el usuario.
+        String pointA = myLocation.getLatitude() + " " + myLocation.getLongitude();
+        String pointB = txtPointB.getText().toString();
+
+        if (pointB.equals("")) {
+            Toast.makeText(MainActivity.this, "Todos los campos son obligatorios", Toast.LENGTH_LONG).show();
+        } else {
+            PeticionJSON peticion = new PeticionJSON();
+            peticion.execute("http://maps.googleapis.com/maps/api/directions/json?origin="
+                    + (pointA).replace(" ", "+") + "&destination=" +
+                    (pointB).replace(" ", "+") + "&sensor=false&mode=driving");
+        }
+        ocultarTeclado();
     }
 
     //Petición y lectura a la API de Rutas de google

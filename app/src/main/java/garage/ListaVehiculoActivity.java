@@ -76,6 +76,7 @@ public class ListaVehiculoActivity extends ActionBarActivity {
                     map.setMarca((String) vehicle.get("Marca"));
                     map.setModelo((String) vehicle.get("Modelo"));
                     map.setImage(image.getUrl());
+                    map.setAutonomia((String) vehicle.get("Autonomia"));
                     vehiclelist.add(map);
                 }
             } catch (ParseException e) {

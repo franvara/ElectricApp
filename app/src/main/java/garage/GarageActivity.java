@@ -1,31 +1,17 @@
 package garage;
 
-import android.app.ActionBar;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.uc3m.electricapp.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class GarageActivity extends ActionBarActivity {
@@ -35,8 +21,10 @@ public class GarageActivity extends ActionBarActivity {
 
     private String marca;
     private String modelo;
+    private String autonomia;
     private TextView txtMarca;
     private TextView txtModelo;
+    private TextView txtAutonomia;
     private TextView txtCentral;
     private ScrollView scroll;
 
@@ -62,6 +50,7 @@ public class GarageActivity extends ActionBarActivity {
 
         txtMarca = (TextView) findViewById(R.id.textViewMarca);
         txtModelo = (TextView) findViewById(R.id.textViewModelo);
+        txtAutonomia = (TextView) findViewById(R.id.textViewAutonomia);
         txtCentral = (TextView) findViewById(R.id.textCentral);
 
 
@@ -93,14 +82,18 @@ public class GarageActivity extends ActionBarActivity {
     }
 
     public void obtenerPreferencias(){
-
         SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
         marca = ficha.getString("marca", "null");
         modelo = ficha.getString("modelo", "null");
+        autonomia = ficha.getString("autonomia", "null");
 
+        cambiarTexto();
+    }
+
+    public void cambiarTexto(){
         txtMarca.setText(marca);
         txtModelo.setText(modelo);
-
+        txtAutonomia.setText(autonomia + " km");
     }
 
     //Este método nos trae la información de para qué se llamó la actividad ListaVehiculoActivity,
@@ -115,15 +108,16 @@ public class GarageActivity extends ActionBarActivity {
             //Leemos los datos del nuevo alta y lanzamos el alta.
             marca = data.getStringExtra("marca");
             modelo = data.getStringExtra("modelo");
+            autonomia = data.getStringExtra("autonomia");
 
-            txtMarca.setText(marca);
-            txtModelo.setText(modelo);
+            cambiarTexto();
 
             //Preferencias para controlar la publicidad
             SharedPreferences prefs = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("marca", marca);
             editor.putString("modelo", modelo);
+            editor.putString("autonomia", autonomia);
             editor.commit();
 
         }

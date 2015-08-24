@@ -5,6 +5,7 @@ public class Vehiculo {
     private String marca;
     private String modelo;
     private String image;
+    private String autonomia;
 
     public String getIdVehiculo() {
         return idVehiculo;
@@ -30,12 +31,19 @@ public class Vehiculo {
         this.modelo = modelo;
     }
 
-
     public String getImage() {
         return image;
     }
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getAutonomia() {
+        return autonomia;
+    }
+
+    public void setAutonomia(String autonomia) {
+        this.autonomia = autonomia;
     }
 }

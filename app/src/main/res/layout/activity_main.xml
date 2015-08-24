@@ -1,77 +1,99 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <!-- Destino -->
+
     <LinearLayout
-        android:id="@+id/searchInputSet"
-        android:orientation="vertical"
+        android:id="@+id/buscadorDestino"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/highlighted_text_material_dark">
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:focusableInTouchMode="true"
+        android:visibility="visible">
 
-        <!-- Destino -->
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="3dp"
-            android:layout_marginTop="3dp">
-
-            <AutoCompleteTextView
-                android:id="@+id/inputDestino"
-                android:layout_width="fill_parent"
-                android:layout_height="36dp"
-                android:layout_weight="1"
-                android:layout_alignParentTop="true"
-                android:hint="@string/destino"
-                android:imeOptions="actionSearch"
-                android:paddingBottom="3dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="42dp"
-                android:paddingTop="3dp"
-                android:singleLine="true"
-                android:layout_toStartOf="@+id/clearDestinoButton"
-                android:layout_toLeftOf="@+id/clearDestinoButton" />
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp">
 
             <ImageView
-                android:id="@+id/clearDestinoButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginRight="43dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/btn_borrar"
-                android:visibility="invisible"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="43dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageViewBuscarMapa"
+                android:src="@drawable/ic_buscar"
+                android:clickable="true"
+                android:background="@android:color/white"
+                android:padding="5dp"
+                android:onClick="busquedaLupa"
+            />
 
+        </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnCalcRoute"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/tools_equipment" />
-        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:visibility="visible">
+
+                <AutoCompleteTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/inputDestino"
+                    android:hint="@string/destino"
+                    android:textColor="@android:color/black"
+                    android:singleLine="true"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="19sp"
+                    android:imeOptions="actionSearch"
+                    android:background="@android:color/white"
+                    android:paddingLeft="5dp"/>
+
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/clearDestinoButton"
+                    android:src="@drawable/btn_borrar"
+                    android:background="@android:color/white"
+                    android:paddingRight="9dp"
+                    android:clickable="true"
+                    android:onClick="limpiarBusquedaPorDireccion"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
+    <!--Mapa-->
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="419dp"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_below="@+id/searchInputSet"
         tools:context=".MainActivity"
         android:layout_above="@+id/VehicleBox" />
 
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="24dp"
         android:orientation="vertical"
         android:background="@android:color/holo_green_light"
         android:id="@+id/VehicleBox"
@@ -98,7 +120,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@android:color/darker_gray"
         android:id="@+id/infoBox"
@@ -138,4 +160,4 @@
     </RelativeLayout>
 
 
-</RelativeLayout>
+</LinearLayout>
