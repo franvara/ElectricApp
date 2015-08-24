@@ -13,7 +13,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.uc3m.electricapp.R;
+import com.uc3m.volttrip.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +52,9 @@ public class ListaVehiculoActivity extends ActionBarActivity {
             // Create a progressdialog
             mProgressDialog = new ProgressDialog(ListaVehiculoActivity.this);
             // Set progressdialog title
-            mProgressDialog.setTitle("ElectricApp");
+            mProgressDialog.setTitle(R.string.dealer_name);
             // Set progressdialog message
-            mProgressDialog.setMessage("Cargando...");
+            mProgressDialog.setMessage(getResources().getString(R.string.load));
             mProgressDialog.setIndeterminate(false);
             // Show progressdialog
             mProgressDialog.show();

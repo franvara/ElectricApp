@@ -1,9 +1,7 @@
 package garage;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,14 +9,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.uc3m.electricapp.R;
+import com.uc3m.volttrip.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,9 @@ public class GarageActivity extends AppCompatActivity {
     GarageAdapter adapter;
     public List<VehiculoGarage> garagelist = null;
 
+    private TextView txtCentral;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +51,8 @@ public class GarageActivity extends AppCompatActivity {
         //Habilitar el botón de retroceso de la barra de tareas
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        txtCentral = (TextView) findViewById(R.id.textCentral);
+
         // Execute RemoteDataTask AsyncTask
         new RemoteDataTask().execute();
 
@@ -54,9 +61,6 @@ public class GarageActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Execute RemoteDataTask AsyncTask
-        //new RemoteDataTask().execute();
     }
 
     // RemoteDataTask AsyncTask
@@ -67,9 +71,9 @@ public class GarageActivity extends AppCompatActivity {
             // Create a progressdialog
             mProgressDialog = new ProgressDialog(GarageActivity.this);
             // Set progressdialog title
-            mProgressDialog.setTitle("Garage");
+            mProgressDialog.setTitle(R.string.garage_name);
             // Set progressdialog message
-            mProgressDialog.setMessage("Cargando...");
+            mProgressDialog.setMessage(getResources().getString(R.string.load));
             mProgressDialog.setIndeterminate(false);
             // Show progressdialog
             mProgressDialog.show();
@@ -130,11 +134,29 @@ public class GarageActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // Locate the listview in listview_main.xml
             listview = (ListView) findViewById(R.id.garagelist);
+
             // Pass the results into ListViewAdapter.java
             adapter = new GarageAdapter(GarageActivity.this,
                     garagelist);
             // Binds the Adapter to the ListView
             listview.setAdapter(adapter);
+
+            listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(GarageActivity.this, "presiono LARGO " + position, Toast.LENGTH_SHORT).show();
+                    Log.e("FRAN", "Clicklargo");
+
+                    return true;
+                }
+            });
+
+            if(garagelist.isEmpty()){
+                txtCentral.setVisibility(View.VISIBLE);
+            }else{
+                txtCentral.setVisibility(View.GONE);
+            }
+
             // Close the progressdialog
             mProgressDialog.dismiss();
         }

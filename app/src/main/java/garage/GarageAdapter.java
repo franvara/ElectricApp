@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,7 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.uc3m.electricapp.R;
+import com.uc3m.volttrip.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +66,7 @@ public class GarageAdapter extends BaseAdapter {
         return position;
     }
 
+    @Override
     public View getView(final int position, View view, ViewGroup parent) {
 
         final ViewHolder holder;
@@ -111,13 +111,6 @@ public class GarageAdapter extends BaseAdapter {
                 //Cerramos la activity y retornamos el poder a la activity para que actúe
                 Intent i = ((Activity)context).getIntent();
 
-                //Devolvemos los datos que ha introducido el usuario delegando la tarea
-                /*i.putExtra("marca", marca);
-                i.putExtra("modelo", modelo);
-                i.putExtra("autonomia", autonomia);*/
-
-
-
                 SharedPreferences prefs = context.getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("id", id);
@@ -133,7 +126,10 @@ public class GarageAdapter extends BaseAdapter {
                 ((Activity)context).finish();
 
             }
+
+
         });
+
         return view;
     }
 

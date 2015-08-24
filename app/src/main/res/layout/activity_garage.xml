@@ -39,7 +39,8 @@
                 android:paddingRight="16dp"
                 android:scrollbarStyle="outsideOverlay"
                 android:divider="@android:color/background_dark"
-                android:dividerHeight="1dp"/>
+                android:dividerHeight="1dp"
+                android:animateLayoutChanges="true"/>
 
         </RelativeLayout>
 

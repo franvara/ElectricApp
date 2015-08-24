@@ -1,4 +1,4 @@
-package com.uc3m.electricapp;
+package com.uc3m.volttrip;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -64,7 +64,7 @@ public class AppActivity extends AppCompatActivity {
     private TextView resultado;
     private View clearDestino;
 
-    private TextView txtVehiculoSelect;
+    //private TextView txtVehiculoSelect;
     private FloatingActionButton btnGarage;
 
     private LocationManager locManager;
@@ -90,8 +90,9 @@ public class AppActivity extends AppCompatActivity {
     private int distNum;
     private double distKm;
 
-    private double gasto;
+    private int gasto;
 
+    private View info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,11 +149,13 @@ public class AppActivity extends AppCompatActivity {
         btnGarage = (FloatingActionButton) findViewById(R.id.buttonGarage);
         btnGarage.setBackgroundTintList(
                 getResources().getColorStateList(R.color.color_primary));
-        txtVehiculoSelect = (TextView) findViewById(R.id.txtVehiculoSeleccion);
+        //txtVehiculoSelect = (TextView) findViewById(R.id.txtVehiculoSeleccion);
 
         distanceText = (TextView) findViewById(R.id.campoDistance);
         durationText = (TextView) findViewById(R.id.campoDuration);
         resultado = (TextView) findViewById(R.id.resultado);
+
+        info = (View) findViewById(R.id.infoBox);
 
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
@@ -204,7 +207,7 @@ public class AppActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        actualizarPref();
+        //actualizarPref();
         calcularDistancia();
 
         /*if(miVehiculoMarker!=null)
@@ -281,8 +284,9 @@ public class AppActivity extends AppCompatActivity {
                         String distance = (String) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("distance")).get("text");
                         distanceText.setText(distance);
                         distanceValue = (int) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("distance")).get("value");
-                        String duration = (String) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("duration")).get("text");
-                        durationText.setText(duration);
+
+                        int duration = (int) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("duration")).get("value");
+                        durationText.setText(getDurationString(duration));
 
                         /** Recorriendo todas las fases */
                         for (int j = 0; j < jsonArrayLegs.length(); j++) {
@@ -449,43 +453,54 @@ public class AppActivity extends AppCompatActivity {
         zoomToCoverAllMarkers(latLngList, mMap);
     }
 
-    public void actualizarPref(){
+    /*public void actualizarPref(){
         SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
         marca = ficha.getString("marca", "null");
 
-        if(marca == "null"){
+        *//*if(marca == "null"){
             txtVehiculoSelect.setText("Seleccione un vehículo.");
         }else {
             modelo = ficha.getString("modelo", "null");
 
             txtVehiculoSelect.setText(marca + " " + modelo);
 
-        }
-    }
+        }*//*
+    }*/
 
     public void calcularDistancia(){
         distancia = distanceText.getText().toString();
-        if(marca != "null" && (!(distancia.equals("DISTANCIA")))){
-            SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
 
-            //distNum = Integer.parseInt(distanceValue.replaceAll("[\\D]", ""));
+        if(!(distancia.equals("DISTANCIA"))){
 
-            distKm = ((double) distanceValue) / 1000;
-            Calculo calculo = new Calculo(AppActivity.this);
-            gasto = calculo.gastoBateria(distKm);
+            info.setVisibility(View.VISIBLE);
 
-            resultado.setText(String.valueOf(gasto));
+            if(marca != "null"){
 
-            if(gasto == 0) {
+                SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
+
+                //distNum = Integer.parseInt(distanceValue.replaceAll("[\\D]", ""));
+
+                distKm = ((double) distanceValue) / 1000;
+                Calculo calculo = new Calculo(AppActivity.this);
+
+                gasto = round(calculo.gastoBateria(distKm));
+
+                resultado.setText(String.valueOf(gasto) + " %");
+
+                if(gasto == 0) {
+                    resultado.setText("-");
+                    resultado.setTextColor(Color.BLACK);
+                }
+                else if(gasto >0 && gasto <=60) resultado.setTextColor(Color.GREEN);
+                else if(gasto >60 && gasto <100) resultado.setTextColor(Color.YELLOW);
+                else if(gasto >=100) resultado.setTextColor(Color.RED);
+
+            }else{
                 resultado.setText("-");
                 resultado.setTextColor(Color.BLACK);
             }
-            else if(gasto >0 && gasto <=60) resultado.setTextColor(Color.GREEN);
-            else if(gasto >60 && gasto <100) resultado.setTextColor(Color.YELLOW);
-            else if(gasto >=100) resultado.setTextColor(Color.RED);
         }else{
-            resultado.setText("-");
-            resultado.setTextColor(Color.BLACK);
+            info.setVisibility(View.GONE);
         }
 
     }
@@ -494,6 +509,41 @@ public class AppActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(
                 AppActivity.this.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
+    private int round(double d){
+        double dAbs = Math.abs(d);
+        int i = (int) dAbs;
+        double result = dAbs - (double) i;
+        if(result<0.5){
+            return d<0 ? -i : i;
+        }else{
+            return d<0 ? -(i+1) : i+1;
+        }
+    }
+
+    private String getDurationString(int seconds) {
+
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        //seconds = seconds % 60;
+
+        //return twoDigitString(hours) + " : " + twoDigitString(minutes) + " : " + twoDigitString(seconds);
+        return twoDigitString(hours) + " : " + twoDigitString(minutes);
+
+    }
+
+    private String twoDigitString(int number) {
+
+        if (number == 0) {
+            return "00";
+        }
+
+        if (number / 10 == 0) {
+            return "0" + number;
+        }
+
+        return String.valueOf(number);
     }
 
     //Este método nos trae la información de para qué se llamó la actividad ListaVehiculoActivity,

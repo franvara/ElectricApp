@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">Volt Trip</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">VoltTrip</string>
 
     <!-- Login -->
     <string name="userLog">Usuario</string>
@@ -27,7 +25,12 @@
     <string name="calculating">Calculando ruta...</string>
 
     <!-- Garage -->
+    <string name="garage_name">GARAJE</string>
     <string name="action_añadir">Añadir</string>
+    <string name="load">cargando...</string>
+
+    <!-- Dealer -->
+    <string name="dealer_name">CONCESIONARIO</string>
 
 
 </resources>

@@ -1,4 +1,4 @@
-package com.uc3m.electricapp;
+package com.uc3m.volttrip;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
