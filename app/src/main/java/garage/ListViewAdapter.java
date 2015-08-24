@@ -11,10 +11,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.uc3m.electricapp.R;
 
@@ -34,6 +36,9 @@ public class ListViewAdapter extends BaseAdapter {
     private String marca;
     private String modelo;
     private int autonomia;
+
+    public int result = ((Activity) context).RESULT_CANCELED;
+
 
     ParseUser currentUser = ParseUser.getCurrentUser();
 
@@ -96,13 +101,36 @@ public class ListViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View arg0) {
 
+                ParseQuery<ParseObject> queryGarage = new ParseQuery<ParseObject>(
+                        "Garage");
+
+
                 id = vehiclelist.get(position).getIdVehiculo();
 
                 try{
-                    ParseObject garage = new ParseObject("Garage");
-                    garage.put("user", currentUser.getUsername());
-                    garage.put("vehicle", id);
-                    garage.save();
+                    queryGarage.whereEqualTo("user", currentUser.getUsername());
+                    List<ParseObject> scoreList = queryGarage.find();
+
+                    boolean coincide = false;
+
+                    for (int i = 0; i < scoreList.size(); i++) {
+                        ParseObject row = scoreList.get(i);
+                        String idVehicleGarage = (String) row.get("vehicle");
+
+                        if(idVehicleGarage.equals(id)){
+                            coincide = true;
+                        }
+                    }
+
+                    if(coincide == false) {
+                        ParseObject garage = new ParseObject("Garage");
+                        garage.put("user", currentUser.getUsername());
+                        garage.put("vehicle", id);
+                        garage.save();
+                        result = ((Activity) context).RESULT_OK;
+                    }else{
+                        Toast.makeText(context, "Ya dispone de este vehiculo en su garage", Toast.LENGTH_LONG).show();
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -124,7 +152,7 @@ public class ListViewAdapter extends BaseAdapter {
                 i.putExtra("autonomia", autonomia);*/
 
                 //Cerramos la pantalla indicando que ha ido bien
-                ((Activity)context).setResult(((Activity) context).RESULT_OK, i);
+                ((Activity)context).setResult(result, i);
 
                 ((Activity)context).finish();
 

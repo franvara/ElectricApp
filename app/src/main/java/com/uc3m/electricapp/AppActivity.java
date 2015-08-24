@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -54,12 +55,13 @@ import com.parse.ParseUser;
 import garage.GarageActivity;
 import login.MainActivity;
 
+
 public class AppActivity extends AppCompatActivity {
 
     private TextView txtPointB;
     private TextView distanceText;
     private TextView durationText;
-    private TextView result;
+    private TextView resultado;
     private View clearDestino;
 
     private TextView txtVehiculoSelect;
@@ -80,17 +82,24 @@ public class AppActivity extends AppCompatActivity {
 
     private Marker miVehiculoMarker;
 
+    private int distanceValue;
     private String marca;
     private String modelo;
     private int autonomia;
     private String distancia;
     private int distNum;
+    private double distKm;
+
+    private double gasto;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
+
+        SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
+        String idAntiguo = ficha.getString("id", "null");
 
         //Referencia a la nueva toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
@@ -124,7 +133,7 @@ public class AppActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(AppActivity.this, GarageActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, 0);
                 }
              }
         );
@@ -143,7 +152,7 @@ public class AppActivity extends AppCompatActivity {
 
         distanceText = (TextView) findViewById(R.id.campoDistance);
         durationText = (TextView) findViewById(R.id.campoDuration);
-        result = (TextView) findViewById(R.id.resultado);
+        resultado = (TextView) findViewById(R.id.resultado);
 
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
@@ -271,6 +280,7 @@ public class AppActivity extends AppCompatActivity {
                         //Recogiendo la distancia en km
                         String distance = (String) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("distance")).get("text");
                         distanceText.setText(distance);
+                        distanceValue = (int) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("distance")).get("value");
                         String duration = (String) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("duration")).get("text");
                         durationText.setText(duration);
 
@@ -457,13 +467,25 @@ public class AppActivity extends AppCompatActivity {
         distancia = distanceText.getText().toString();
         if(marca != "null" && (!(distancia.equals("DISTANCIA")))){
             SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
-            autonomia = ficha.getInt("autonomia", 0);
 
-            distNum = Integer.parseInt(distancia.replaceAll("[\\D]", ""));
+            //distNum = Integer.parseInt(distanceValue.replaceAll("[\\D]", ""));
 
-            result.setText(String.valueOf(distNum));
+            distKm = ((double) distanceValue) / 1000;
+            Calculo calculo = new Calculo(AppActivity.this);
+            gasto = calculo.gastoBateria(distKm);
 
+            resultado.setText(String.valueOf(gasto));
 
+            if(gasto == 0) {
+                resultado.setText("-");
+                resultado.setTextColor(Color.BLACK);
+            }
+            else if(gasto >0 && gasto <=60) resultado.setTextColor(Color.GREEN);
+            else if(gasto >60 && gasto <100) resultado.setTextColor(Color.YELLOW);
+            else if(gasto >=100) resultado.setTextColor(Color.RED);
+        }else{
+            resultado.setText("-");
+            resultado.setTextColor(Color.BLACK);
         }
 
     }
@@ -472,6 +494,19 @@ public class AppActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(
                 AppActivity.this.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
+    //Este método nos trae la información de para qué se llamó la actividad ListaVehiculoActivity,
+    //cuál fue el resultado ("OK" o "CANCELED"), y el intent que nos traerá la
+    //información que necesitamos de la segunda actividad.
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Comprobamos si el resultado de la segunda actividad es "RESULT_OK".
+        if (resultCode == android.app.Activity.RESULT_OK) {
+
+        }
     }
 
     @Override

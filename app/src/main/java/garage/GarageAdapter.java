@@ -3,6 +3,9 @@ package garage;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,10 +28,12 @@ public class GarageAdapter extends BaseAdapter {
     private List<VehiculoGarage> garagelist = null;
     private ArrayList<VehiculoGarage> arraylist;
 
+    private String idAntiguo;
     private String id;
     private String marca;
     private String modelo;
     private int autonomia;
+    private int bateria;
 
 
     public GarageAdapter(Context context,
@@ -63,6 +68,7 @@ public class GarageAdapter extends BaseAdapter {
     }
 
     public View getView(final int position, View view, ViewGroup parent) {
+
         final ViewHolder holder;
         if (view == null) {
             holder = new ViewHolder();
@@ -79,6 +85,15 @@ public class GarageAdapter extends BaseAdapter {
         // Set the results into TextViews
         holder.marca.setText(garagelist.get(position).getMarca());
         holder.modelo.setText(garagelist.get(position).getModelo());
+
+
+        SharedPreferences ficha = context.getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
+        idAntiguo = ficha.getString("id", "null");
+        id = garagelist.get(position).getIdVehiculo();
+        if(idAntiguo.equals(id)){
+            view.setBackgroundColor(Color.parseColor("#C5CAE9"));
+        }
+
         // Set the results into ImageView
         imageLoader.DisplayImage(garagelist.get(position).getImage(),
                 holder.image);
@@ -87,23 +102,35 @@ public class GarageAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View arg0) {
-                /*id = garagelist.get(position).getIdVehiculo();
+                id = garagelist.get(position).getIdVehiculo();
                 marca = garagelist.get(position).getMarca();
                 modelo = garagelist.get(position).getModelo();
                 autonomia = garagelist.get(position).getAutonomia();
+                bateria = garagelist.get(position).getBateria();
 
                 //Cerramos la activity y retornamos el poder a la activity para que actúe
                 Intent i = ((Activity)context).getIntent();
 
                 //Devolvemos los datos que ha introducido el usuario delegando la tarea
-                i.putExtra("marca", marca);
+                /*i.putExtra("marca", marca);
                 i.putExtra("modelo", modelo);
-                i.putExtra("autonomia", autonomia);
+                i.putExtra("autonomia", autonomia);*/
+
+
+
+                SharedPreferences prefs = context.getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("id", id);
+                editor.putString("marca", marca);
+                editor.putString("modelo", modelo);
+                editor.putInt("autonomia", autonomia);
+                editor.putInt("bateria", bateria);
+                editor.commit();
 
                 //Cerramos la pantalla indicando que ha ido bien
                 ((Activity)context).setResult(((Activity)context).RESULT_OK, i);
 
-                ((Activity)context).finish();*/
+                ((Activity)context).finish();
 
             }
         });

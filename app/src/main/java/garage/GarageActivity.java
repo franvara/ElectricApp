@@ -1,20 +1,18 @@
 package garage;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -35,7 +33,6 @@ public class GarageActivity extends AppCompatActivity {
     ProgressDialog mProgressDialog;
     GarageAdapter adapter;
     public List<VehiculoGarage> garagelist = null;
-    private FloatingActionButton btnAdd;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,21 +46,8 @@ public class GarageActivity extends AppCompatActivity {
         //Habilitar el botón de retroceso de la barra de tareas
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        btnAdd = (FloatingActionButton) findViewById(R.id.buttonAdd);
-        btnAdd.setBackgroundTintList(
-                getResources().getColorStateList(R.color.color_primary));
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-                                      @Override
-                                      public void onClick(View v) {
-                                          Intent intent = new Intent(GarageActivity.this, ListaVehiculoActivity.class);
-                                          startActivity(intent);
-                                      }
-                                  }
-        );
-
         // Execute RemoteDataTask AsyncTask
-        if(garagelist == null) new RemoteDataTask().execute();
+        new RemoteDataTask().execute();
 
     }
 
@@ -125,6 +109,7 @@ public class GarageActivity extends AppCompatActivity {
                         map.setModelo((String) row2.get("Modelo"));
                         map.setImage(image.getUrl());
                         map.setAutonomia((int) row2.get("Autonomia"));
+                        map.setBateria((int) row2.get("Bateria"));
                         garagelist.add(map);
                     }
 

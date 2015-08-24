@@ -6,6 +6,8 @@ public class VehiculoGarage {
     private String modelo;
     private String image;
     private int autonomia;
+    private int bateria;
+
 
     public String getIdVehiculo() {
         return idVehiculo;
@@ -45,5 +47,13 @@ public class VehiculoGarage {
 
     public void setAutonomia(int autonomia) {
         this.autonomia = autonomia;
+    }
+
+    public int getBateria() {
+        return bateria;
+    }
+
+    public void setBateria(int bateria) {
+        this.bateria = bateria;
     }
 }
