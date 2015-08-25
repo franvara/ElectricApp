@@ -35,10 +35,11 @@
 
     <RelativeLayout
         android:id="@+id/l2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:gravity="center_vertical|center_horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -48,11 +49,6 @@
             android:id="@+id/progressBar"
             android:layout_centerInParent="true"
             android:visibility="gone" />
-
-        <ScrollView
-            android:id="@+id/signup_scroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -117,7 +113,6 @@
 
                 </LinearLayout>
             </LinearLayout>
-        </ScrollView>
     </RelativeLayout>
 
     <LinearLayout

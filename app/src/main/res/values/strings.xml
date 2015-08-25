@@ -19,15 +19,20 @@
     <string name="username_taken">Lo sentimos, este nombre de usuario ya ha sido elegido.</string>
 
 
-    <!-- Origen -->
+    <!-- App -->
     <string name="destino">Destino</string>
 
     <string name="calculating">Calculando ruta...</string>
 
+    <string name="hours"> h </string>
+    <string name="minutes"> min</string>
+
     <!-- Garage -->
     <string name="garage_name">GARAJE</string>
     <string name="action_añadir">Añadir</string>
-    <string name="load">cargando...</string>
+    <string name="load">Cargando...</string>
+    <string name="garage_empty">SU GARAGE ESTÁ VACÍO, SELECCIONE UN VEHÍCULO</string>
+
 
     <!-- Dealer -->
     <string name="dealer_name">CONCESIONARIO</string>

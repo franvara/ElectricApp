@@ -528,8 +528,10 @@ public class AppActivity extends AppCompatActivity {
         int minutes = (seconds % 3600) / 60;
         //seconds = seconds % 60;
 
+        if(hours == 00) return twoDigitString(minutes) + " min";
+        else return twoDigitString(hours) + " h " + twoDigitString(minutes) + " min";
         //return twoDigitString(hours) + " : " + twoDigitString(minutes) + " : " + twoDigitString(seconds);
-        return twoDigitString(hours) + " : " + twoDigitString(minutes);
+        //return twoDigitString(hours) + " " + R.string.hours + " "+ twoDigitString(minutes) + " " + R.string.minutes;
 
     }
 

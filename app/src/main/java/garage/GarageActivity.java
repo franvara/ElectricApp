@@ -141,16 +141,6 @@ public class GarageActivity extends AppCompatActivity {
             // Binds the Adapter to the ListView
             listview.setAdapter(adapter);
 
-            listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(GarageActivity.this, "presiono LARGO " + position, Toast.LENGTH_SHORT).show();
-                    Log.e("FRAN", "Clicklargo");
-
-                    return true;
-                }
-            });
-
             if(garagelist.isEmpty()){
                 txtCentral.setVisibility(View.VISIBLE);
             }else{
