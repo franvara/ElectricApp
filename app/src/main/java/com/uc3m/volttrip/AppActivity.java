@@ -64,7 +64,7 @@ public class AppActivity extends AppCompatActivity {
     private TextView resultado;
     private View clearDestino;
 
-    //private TextView txtVehiculoSelect;
+    private TextView txtVehiculoSelect;
     private FloatingActionButton btnGarage;
 
     private LocationManager locManager;
@@ -85,14 +85,14 @@ public class AppActivity extends AppCompatActivity {
     private int distanceValue;
     private String marca;
     private String modelo;
-    private int autonomia;
     private String distancia;
-    private int distNum;
     private double distKm;
 
     private int gasto;
 
     private View info;
+    private View infoCar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +100,6 @@ public class AppActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app);
 
         SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
-        String idAntiguo = ficha.getString("id", "null");
 
         //Referencia a la nueva toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
@@ -149,13 +148,15 @@ public class AppActivity extends AppCompatActivity {
         btnGarage = (FloatingActionButton) findViewById(R.id.buttonGarage);
         btnGarage.setBackgroundTintList(
                 getResources().getColorStateList(R.color.color_primary));
-        //txtVehiculoSelect = (TextView) findViewById(R.id.txtVehiculoSeleccion);
+        txtVehiculoSelect = (TextView) findViewById(R.id.txtVehiculoSeleccion);
 
         distanceText = (TextView) findViewById(R.id.campoDistance);
         durationText = (TextView) findViewById(R.id.campoDuration);
         resultado = (TextView) findViewById(R.id.resultado);
 
-        info = (View) findViewById(R.id.infoBox);
+        info = findViewById(R.id.infoBox);
+        infoCar = findViewById(R.id.car_info_box);
+
 
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
@@ -207,11 +208,11 @@ public class AppActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        //actualizarPref();
+        actualizarPref();
         calcularDistancia();
 
-        /*if(miVehiculoMarker!=null)
-            miVehiculoMarker.setPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));*/
+        if(miVehiculoMarker!=null)
+            miVehiculoMarker.setPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
     }
 
 
@@ -443,7 +444,7 @@ public class AppActivity extends AppCompatActivity {
 
         // Añadimos un marcador con posición, título, icono y descripción.
         miVehiculoMarker = mMap.addMarker(new MarkerOptions().position(latLngInicio).title("Posición Actual")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_car)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_car)));
         //.snippet("Subtítulo")
 
         ArrayList<LatLng> latLngList = new ArrayList<>();
@@ -453,19 +454,21 @@ public class AppActivity extends AppCompatActivity {
         zoomToCoverAllMarkers(latLngList, mMap);
     }
 
-    /*public void actualizarPref(){
+    public void actualizarPref(){
         SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
         marca = ficha.getString("marca", "null");
 
-        *//*if(marca == "null"){
+        if(marca == "null"){
+            infoCar.setVisibility(View.GONE);
             txtVehiculoSelect.setText("Seleccione un vehículo.");
         }else {
             modelo = ficha.getString("modelo", "null");
 
             txtVehiculoSelect.setText(marca + " " + modelo);
+            infoCar.setVisibility(View.VISIBLE);
 
-        }*//*
-    }*/
+        }
+    }
 
     public void calcularDistancia(){
         distancia = distanceText.getText().toString();

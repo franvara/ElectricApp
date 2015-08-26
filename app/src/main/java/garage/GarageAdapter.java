@@ -41,7 +41,6 @@ public class GarageAdapter extends BaseAdapter {
     private int autonomia;
     private int bateria;
 
-
     public GarageAdapter(Context context,
                          List<VehiculoGarage> garagelist) {
         this.context = context;
@@ -50,6 +49,7 @@ public class GarageAdapter extends BaseAdapter {
         this.arraylist = new ArrayList<VehiculoGarage>();
         this.arraylist.addAll(garagelist);
         imageLoader = new ImageLoader(context);
+
     }
 
     public class ViewHolder {
@@ -146,7 +146,6 @@ public class GarageAdapter extends BaseAdapter {
                 remove(Integer.valueOf(view.getTag().toString()));
             }
         });
-
 
         return view;
     }

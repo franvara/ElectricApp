@@ -22,6 +22,8 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyARkB-CztKDllGEjSfDtynmgEZutIkrMX8" />
 
+        <!--App PRO: AIzaSyAWCNuSceqiAPGVPcs23qe1pL4qpBVz1Do
+        SHA1: 54:B3:5E:90:63:7B:87:99:82:81:81:26:88:27:E3:5C:2A:50:73:78-->
         <!--MAC_Debug: AIzaSyARkB-CztKDllGEjSfDtynmgEZutIkrMX8
         SHA1: 84:75:F1:E3:3E:23:62:BB:63:04:CD:C5:CA:62:E9:1D:87:39:0B:D9-->
         <!--UNISYS_Debug: AIzaSyB_SCuqoCm2odCXaY6Yu3gP1SGNc6iNDcA
