@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -49,6 +51,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.parse.ParseUser;
 
@@ -87,6 +90,12 @@ public class AppActivity extends AppCompatActivity {
     private String modelo;
     private String distancia;
     private double distKm;
+    private int autonomia;
+    private int cuentaM;
+
+    private LatLng ultimoPunto;
+
+
 
     private int gasto;
 
@@ -130,12 +139,12 @@ public class AppActivity extends AppCompatActivity {
         });
 
         btnGarage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(AppActivity.this, GarageActivity.class);
-                    startActivityForResult(intent, 0);
-                }
-             }
+                                         @Override
+                                         public void onClick(View v) {
+                                             Intent intent = new Intent(AppActivity.this, GarageActivity.class);
+                                             startActivityForResult(intent, 0);
+                                         }
+                                     }
         );
         initMap();
     }
@@ -234,7 +243,7 @@ public class AppActivity extends AppCompatActivity {
         String pointB = txtPointB.getText().toString();
 
         if (pointB.equals("")) {
-            Toast.makeText(AppActivity.this, "Todos los campos son obligatorios", Toast.LENGTH_LONG).show();
+            Toast.makeText(AppActivity.this, R.string.campos_obligatorios, Toast.LENGTH_LONG).show();
         } else {
             PeticionJSON peticion = new PeticionJSON();
             peticion.execute("http://maps.googleapis.com/maps/api/directions/json?origin="
@@ -242,6 +251,7 @@ public class AppActivity extends AppCompatActivity {
                     (pointB).replace(" ", "+") + "&sensor=false&mode=driving");
         }
         ocultarTeclado();
+
     }
 
     //Petición y lectura a la API de Rutas de google
@@ -267,6 +277,8 @@ public class AppActivity extends AppCompatActivity {
 
         protected void onPostExecute(String result) {
             try {
+                ultimoPunto = null;
+
                 JSONObject jsonObjectResult = new JSONObject(result);
 
                 String status = jsonObjectResult.getString("status");
@@ -281,11 +293,12 @@ public class AppActivity extends AppCompatActivity {
                     for (int i = 0; i < jsonArrayRutas.length(); i++) {
                         JSONArray jsonArrayLegs = ((JSONObject) jsonArrayRutas.get(i)).getJSONArray("legs");
 
-                        //Recogiendo la distancia en km
+                        //Recogiendo la distancia en texto y en metros
                         String distance = (String) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("distance")).get("text");
                         distanceText.setText(distance);
                         distanceValue = (int) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("distance")).get("value");
 
+                        //Recogiendo la duracion en segundos
                         int duration = (int) ((JSONObject) ((JSONObject) jsonArrayLegs.get(i)).get("duration")).get("value");
                         durationText.setText(getDurationString(duration));
 
@@ -294,8 +307,28 @@ public class AppActivity extends AppCompatActivity {
                             JSONArray jsonArraySteps = ((JSONObject) jsonArrayLegs.get(j)).getJSONArray("steps");
 
                             Log.i("length array", jsonArraySteps.length() + "");
+
+                            //FRAN
+                            SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
+                            autonomia = ficha.getInt("autonomia", 0);
+                            int autonomiaM = autonomia *1000;
+                            cuentaM = 0;
+                            boolean distanciaSobrepasada = false;
+
                             /** Recorriendo todos los pasos */
                             for (int k = 0; k < jsonArraySteps.length(); k++) {
+
+                                //Para saber cual es el ultimo punto donde ha llegado con el 100% de
+                                //la bateria
+                                double stepM = 0;
+                                stepM = (int) ((JSONObject) ((JSONObject) jsonArraySteps.get(k)).get("distance")).get("value");
+                                cuentaM += stepM;
+                                if(cuentaM > autonomiaM && !distanciaSobrepasada){
+                                    ultimoPunto = listaPuntos.get((listaPuntos.size())-1);
+                                    //ultimoPunto = new LatLng(40.043692, -3.581320); Aranjuez
+                                    distanciaSobrepasada = true;
+                                }
+
 
                                 String polyline = "";
                                 polyline = (String) ((JSONObject) ((JSONObject) jsonArraySteps.get(k)).get("polyline")).get("points");
@@ -307,6 +340,7 @@ public class AppActivity extends AppCompatActivity {
 
                                 }
                             }
+
                         }
                     }
                     latitudes = new double[listaPuntos.size()];
@@ -315,10 +349,20 @@ public class AppActivity extends AppCompatActivity {
                         latitudes[i] = listaPuntos.get(i).latitude;
                         longitudes[i] = listaPuntos.get(i).longitude;
                     }
-
-                    progressDialog.dismiss();
                     //Acción
                     pintarRuta(latitudes, longitudes);
+                    calcularDistancia();
+
+                    progressDialog.dismiss();
+
+                    Ministerio ministerio = new Ministerio(AppActivity.this);
+                    if(ultimoPunto != null && marca != "null"){
+                        mMap.addMarker(new MarkerOptions().position(ultimoPunto)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_off)));
+                        ministerio.buscarGasolineras(ultimoPunto);
+                    }
+
+
                 } else {
                     Toast.makeText(AppActivity.this,
                             "No existen resultados. Por favor, intente ajustar mejor la dirección de destino.",
@@ -327,7 +371,6 @@ public class AppActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
 
-                calcularDistancia();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -550,6 +593,7 @@ public class AppActivity extends AppCompatActivity {
 
         return String.valueOf(number);
     }
+
 
     //Este método nos trae la información de para qué se llamó la actividad ListaVehiculoActivity,
     //cuál fue el resultado ("OK" o "CANCELED"), y el intent que nos traerá la

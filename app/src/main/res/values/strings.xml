@@ -23,6 +23,8 @@
     <string name="destino">Destino</string>
 
     <string name="calculating">Calculando ruta...</string>
+    <string name="campos_obligatorios">Todos los campos son obligatorios.</string>
+
 
     <string name="hours"> h </string>
     <string name="minutes"> min</string>
