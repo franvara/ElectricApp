@@ -1,41 +1,31 @@
 package com.uc3m.volttrip;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Gasolinera {
-    private String rotulo;
-    private String direccion;
-    private String x;
-    private String y;
+    private String info;
+    private LatLng latLng;
 
-    public String getRotulo() {
-        return rotulo;
+    public Gasolinera(String info, LatLng latLng){
+        this.info = info;
+        this.latLng = latLng;
+
     }
 
-    public String getDireccion() {
-        return direccion;
+/*    public String getInfo() {
+        return info;
     }
 
-    public String getX() {
-        return x;
+    public LatLng getlatLong() {
+        return latLng;
     }
 
-    public String getY() {
-        return y;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
-    public void setRotulo(String rotulo) {
-        this.rotulo = rotulo;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public void setX(String x) {
-        this.x = x;
-    }
-
-    public void setY(String y) {
-        this.y = y;
-    }
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+    }*/
 
 }

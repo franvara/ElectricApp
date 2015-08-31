@@ -323,7 +323,7 @@ public class AppActivity extends AppCompatActivity {
                                 double stepM = 0;
                                 stepM = (int) ((JSONObject) ((JSONObject) jsonArraySteps.get(k)).get("distance")).get("value");
                                 cuentaM += stepM;
-                                if(cuentaM > autonomiaM && !distanciaSobrepasada){
+                                if(cuentaM > autonomiaM && autonomiaM!=0 && !distanciaSobrepasada){
                                     ultimoPunto = listaPuntos.get((listaPuntos.size())-1);
                                     //ultimoPunto = new LatLng(40.043692, -3.581320); Aranjuez
                                     distanciaSobrepasada = true;
@@ -355,11 +355,15 @@ public class AppActivity extends AppCompatActivity {
 
                     progressDialog.dismiss();
 
-                    Ministerio ministerio = new Ministerio(AppActivity.this);
+                    Ministerio ministerio = new Ministerio();
                     if(ultimoPunto != null && marca != "null"){
                         mMap.addMarker(new MarkerOptions().position(ultimoPunto)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_off)));
-                        ministerio.buscarGasolineras(ultimoPunto);
+                        List<Gasolinera> gasolineras = ministerio.buscarGasolineras(ultimoPunto);
+
+                        if(gasolineras != null){
+
+                        }
                     }
 
 
