@@ -33,12 +33,11 @@ public class Ministerio {
 
     private String pagina;
 
-    private GoogleMap mMap;
 
 
+    public void buscarGasolineras(LatLng ultimoPunto, Context AppContext){
 
-    public List buscarGasolineras(LatLng ultimoPunto){
-
+        context = AppContext;
         //http://geoportalgasolineras.es/searchAddress.do?nomProvincia=&nomMunicipio=Barcelona
         // &tipoCarburante=1&rotulo=&tipoVenta=false&nombreVia=&numVia=&codPostal=&economicas=false
         // &tipoBusqueda=0&ordenacion=&posicion=0&yui=true
@@ -47,15 +46,11 @@ public class Ministerio {
 
         pagina = "http://www.movele.es/index.php/mod.puntos/mem.mapa/relmenu.20/regini.0/numregs.330/filtro." + municipio;
         PeticionStation peticionS = new PeticionStation();
-        peticionS.execute(web);
-
-
-
-        return result;
+        peticionS.execute();
 
     }
 
-    public class PeticionStation extends AsyncTask<String, Void, List> {
+    public class PeticionStation extends AsyncTask<String, Void, List<Gasolinera>> {
 
         @Override
         protected void onPreExecute() {
@@ -68,7 +63,8 @@ public class Ministerio {
             Log.i("PRUEBAS", "JSON onProgressUpdate");
         }
 
-        protected List doInBackground(String... params) {
+        @Override
+        protected List<Gasolinera> doInBackground(String... params) {
             List<Gasolinera> lista = new ArrayList< Gasolinera>();
 
             String url = pagina;
@@ -110,11 +106,9 @@ public class Ministerio {
             return lista;
         }
 
-        protected void onPostExecute(List result) {
-
-            //Toast.makeText(context, txtResultado, Toast.LENGTH_LONG).show();
-
-            getResultPost(result);
+        @Override
+        protected void onPostExecute(List<Gasolinera> gasolineras) {
+            ((AppActivity) context).setMarkerStation(gasolineras);
         }
     }
 
@@ -128,14 +122,17 @@ public class Ministerio {
             Geocoder gcd = new Geocoder(context, Locale.getDefault());
             List<Address> addresses = gcd.getFromLocation(posicion.latitude , posicion.longitude, 1);
             if (addresses.size() > 0) {
-                //municipio = addresses.get(0).getLocality();
+                /*String a = addresses.get(0).getAdminArea();
+                String b = addresses.get(0).getFeatureName();
+                String c = addresses.get(0).getLocality();
+                String d = addresses.get(0).getCountryName();*/
+
                 result = addresses.get(0).getSubAdminArea();
-                Toast.makeText(context, municipio, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, result, Toast.LENGTH_LONG).show();
 
 
             }
 
-            //municipio = "Madrid";
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("PRUEBAS", "catch");
@@ -167,8 +164,5 @@ public class Ministerio {
 
     }
 
-    public void getResultPost(List lista){
-        this.result = lista;
-    }
 
 }

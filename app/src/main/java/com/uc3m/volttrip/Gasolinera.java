@@ -12,7 +12,7 @@ public class Gasolinera {
 
     }
 
-/*    public String getInfo() {
+    public String getInfo() {
         return info;
     }
 
@@ -26,6 +26,6 @@ public class Gasolinera {
 
     public void setLatLng(LatLng latLng) {
         this.latLng = latLng;
-    }*/
+    }
 
 }

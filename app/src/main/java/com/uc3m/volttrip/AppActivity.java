@@ -2,6 +2,7 @@ package com.uc3m.volttrip;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -41,9 +43,15 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,6 +62,9 @@ import java.util.List;
 import java.util.Locale;
 
 import com.parse.ParseUser;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import garage.GarageActivity;
 import login.MainActivity;
@@ -91,9 +102,12 @@ public class AppActivity extends AppCompatActivity {
     private String distancia;
     private double distKm;
     private int autonomia;
+    private int autonomiaM;
     private int cuentaM;
 
     private LatLng ultimoPunto;
+    private LatLng puntoSinBat;
+    private boolean encontradoPuntoSinbat;
 
 
 
@@ -101,6 +115,8 @@ public class AppActivity extends AppCompatActivity {
 
     private View info;
     private View infoCar;
+
+    private boolean distanciaSobrepasada;
 
 
     @Override
@@ -278,6 +294,8 @@ public class AppActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             try {
                 ultimoPunto = null;
+                puntoSinBat = null;
+                encontradoPuntoSinbat = false;
 
                 JSONObject jsonObjectResult = new JSONObject(result);
 
@@ -311,9 +329,9 @@ public class AppActivity extends AppCompatActivity {
                             //FRAN
                             SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
                             autonomia = ficha.getInt("autonomia", 0);
-                            int autonomiaM = autonomia *1000;
+                            autonomiaM = autonomia *1000;
                             cuentaM = 0;
-                            boolean distanciaSobrepasada = false;
+                            distanciaSobrepasada = false;
 
                             /** Recorriendo todos los pasos */
                             for (int k = 0; k < jsonArraySteps.length(); k++) {
@@ -324,9 +342,10 @@ public class AppActivity extends AppCompatActivity {
                                 stepM = (int) ((JSONObject) ((JSONObject) jsonArraySteps.get(k)).get("distance")).get("value");
                                 cuentaM += stepM;
                                 if(cuentaM > autonomiaM && autonomiaM!=0 && !distanciaSobrepasada){
-                                    ultimoPunto = listaPuntos.get((listaPuntos.size())-1);
+                                    ultimoPunto = listaPuntos.get((listaPuntos.size())-2);
                                     //ultimoPunto = new LatLng(40.043692, -3.581320); Aranjuez
                                     distanciaSobrepasada = true;
+                                    cuentaM -= stepM;
                                 }
 
 
@@ -356,14 +375,11 @@ public class AppActivity extends AppCompatActivity {
                     progressDialog.dismiss();
 
                     Ministerio ministerio = new Ministerio();
-                    if(ultimoPunto != null && marca != "null"){
-                        mMap.addMarker(new MarkerOptions().position(ultimoPunto)
+                    if(puntoSinBat != null && marca != "null"){
+                        mMap.addMarker(new MarkerOptions().position(puntoSinBat)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_off)));
-                        List<Gasolinera> gasolineras = ministerio.buscarGasolineras(ultimoPunto);
+                        ministerio.buscarGasolineras(puntoSinBat, AppActivity.this);
 
-                        if(gasolineras != null){
-
-                        }
                     }
 
 
@@ -423,6 +439,14 @@ public class AppActivity extends AppCompatActivity {
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
 
+        Location locAnterior = new Location("");
+        Location locSiguiente = new Location("");
+
+        if (distanciaSobrepasada){
+            locAnterior.setLatitude(ultimoPunto.latitude);
+            locAnterior.setLongitude(ultimoPunto.longitude);
+        }
+
         while (index < len) {
             int b, shift = 0, result = 0;
             do {
@@ -445,6 +469,31 @@ public class AppActivity extends AppCompatActivity {
 
             LatLng p = new LatLng((((double) lat / 1E5)),
                     (((double) lng / 1E5)));
+
+
+            locSiguiente.setLatitude(p.latitude);
+            locSiguiente.setLongitude(p.longitude);
+
+
+            if(distanciaSobrepasada){
+
+                Location targetLocation = new Location("");
+                targetLocation.setLatitude(0.0d);
+                targetLocation.setLongitude(0.0d);
+
+                float distPuntos = locAnterior.distanceTo(locSiguiente);
+                cuentaM += distPuntos;
+
+                if(cuentaM > autonomiaM && !encontradoPuntoSinbat) {
+                    puntoSinBat = new LatLng(locAnterior.getLatitude(), locAnterior.getLongitude());
+                    encontradoPuntoSinbat = true;
+                }
+
+            }
+
+            locAnterior.setLatitude(p.latitude);
+            locAnterior.setLongitude(p.longitude);
+
             poly.add(p);
         }
 
@@ -490,7 +539,8 @@ public class AppActivity extends AppCompatActivity {
         mMap.addMarker(new MarkerOptions().position(latLngFin));
 
         // Añadimos un marcador con posición, título, icono y descripción.
-        miVehiculoMarker = mMap.addMarker(new MarkerOptions().position(latLngInicio).title("Posición Actual")
+        miVehiculoMarker = mMap.addMarker(new MarkerOptions().position(latLngInicio)
+                .title(getString(R.string.posición_actual))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_car)));
         //.snippet("Subtítulo")
 
@@ -598,6 +648,15 @@ public class AppActivity extends AppCompatActivity {
         return String.valueOf(number);
     }
 
+    public void setMarkerStation(List<Gasolinera> result){
+        for(Gasolinera gasolinera:result){
+            mMap.addMarker(new MarkerOptions().position(gasolinera.getlatLong()).
+                    title(gasolinera.getInfo())
+            );
+
+        }
+
+    }
 
     //Este método nos trae la información de para qué se llamó la actividad ListaVehiculoActivity,
     //cuál fue el resultado ("OK" o "CANCELED"), y el intent que nos traerá la
