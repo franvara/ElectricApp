@@ -22,13 +22,17 @@
     <!-- App -->
     <string name="destino">Destino</string>
     <string name="posición_actual">Posición actual</string>
-
+    <string name="noStation">Lo sentimos, no hemos encontrado puntos de recarga cercanos.</string>
     <string name="calculating">Calculando ruta...</string>
-    <string name="campos_obligatorios">Todos los campos son obligatorios.</string>
+    <string name="search_station">Buscando puntos de recarga cercanos.</string>
+
+    <string name="campos_obligatorios">Por favor, introduza un destino.</string>
+
     <string name="gps_not_found_title">GPS no encontrado.</string>
     <string name="gps_not_found_message">¿Quiere habilitarlo?</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+
 
 
 

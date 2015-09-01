@@ -80,6 +80,10 @@ public class AppActivity extends AppCompatActivity {
 
     private TextView txtVehiculoSelect;
     private FloatingActionButton btnGarage;
+    private FloatingActionButton btnStations;
+    public boolean btnStationSelect;
+    private boolean botones;
+
 
     private LocationManager locManager;
 
@@ -162,6 +166,20 @@ public class AppActivity extends AppCompatActivity {
                                          }
                                      }
         );
+
+        btnStations.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+
+                                             btnStationSelect = true;
+                                             Ministerio ministerio = new Ministerio();
+                                             ministerio.buscarGasolineras(new LatLng
+                                                     (myLocation.getLatitude(), myLocation.getLongitude()),
+                                                     AppActivity.this, btnStationSelect);
+
+                                         }
+                                     }
+        );
         initMap();
     }
 
@@ -173,6 +191,15 @@ public class AppActivity extends AppCompatActivity {
         btnGarage = (FloatingActionButton) findViewById(R.id.buttonGarage);
         btnGarage.setBackgroundTintList(
                 getResources().getColorStateList(R.color.color_primary));
+
+        btnStations = (FloatingActionButton) findViewById(R.id.buttonStations);
+        btnStations.setBackgroundTintList(
+                getResources().getColorStateList(R.color.color_primary));
+        btnStationSelect = false;
+
+        botones = true;
+
+
         txtVehiculoSelect = (TextView) findViewById(R.id.txtVehiculoSeleccion);
 
         distanceText = (TextView) findViewById(R.id.campoDistance);
@@ -221,6 +248,15 @@ public class AppActivity extends AppCompatActivity {
             @Override
             public void onMapClick(LatLng arg0) {
                 ocultarTeclado();
+                if(botones){
+                    btnGarage.setVisibility(View.GONE);
+                    btnStations.setVisibility(View.GONE);
+                    botones = false;
+                }else{
+                    btnGarage.setVisibility(View.VISIBLE);
+                    btnStations.setVisibility(View.VISIBLE);
+                    botones = true;
+                }
             }
         });
 
@@ -378,7 +414,7 @@ public class AppActivity extends AppCompatActivity {
                     if(puntoSinBat != null && marca != "null"){
                         mMap.addMarker(new MarkerOptions().position(puntoSinBat)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_off)));
-                        ministerio.buscarGasolineras(puntoSinBat, AppActivity.this);
+                        ministerio.buscarGasolineras(puntoSinBat, AppActivity.this, btnStationSelect);
 
                     }
 
@@ -592,7 +628,7 @@ public class AppActivity extends AppCompatActivity {
                     resultado.setTextColor(Color.BLACK);
                 }
                 else if(gasto >0 && gasto <=60) resultado.setTextColor(Color.GREEN);
-                else if(gasto >60 && gasto <100) resultado.setTextColor(Color.YELLOW);
+                else if(gasto >60 && gasto <100) resultado.setTextColor(getResources().getColor(R.color.Lime));
                 else if(gasto >=100) resultado.setTextColor(Color.RED);
 
             }else{
@@ -649,12 +685,22 @@ public class AppActivity extends AppCompatActivity {
     }
 
     public void setMarkerStation(List<Gasolinera> result){
+
+        ArrayList<LatLng> StationList = new ArrayList<>();
+
         for(Gasolinera gasolinera:result){
             mMap.addMarker(new MarkerOptions().position(gasolinera.getlatLong()).
-                    title(gasolinera.getInfo())
+                            title(gasolinera.getInfo())
             );
 
+            StationList.add(gasolinera.getlatLong());
+
         }
+
+        if(btnStationSelect){
+            zoomToCoverAllMarkers(StationList, mMap);
+        }
+        btnStationSelect = false;
 
     }
 

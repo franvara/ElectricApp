@@ -203,8 +203,22 @@
                 app:fabSize="normal"
                 app:borderWidth="0dp"
                 android:layout_alignBottom="@id/linear_contenedor"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginBottom="35dp"/>
+
+            <!--Stations button-->
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/buttonStations"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/btn_station"
+                app:fabSize="normal"
+                app:borderWidth="0dp"
+                android:layout_alignBottom="@id/linear_contenedor"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="96dp"/>
+
+
         </RelativeLayout>
 
 

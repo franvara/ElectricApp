@@ -1,5 +1,6 @@
 package com.uc3m.volttrip;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -7,11 +8,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,6 +23,9 @@ import java.util.Locale;
 public class Ministerio {
 
     Context context;
+    private ProgressDialog progressDialogStation;
+
+
     String municipio;
     public List<Gasolinera> result;
     private String txtResultado;
@@ -33,11 +34,14 @@ public class Ministerio {
 
     private String pagina;
 
+    private boolean btnStation;
 
 
-    public void buscarGasolineras(LatLng ultimoPunto, Context AppContext){
+
+    public void buscarGasolineras(LatLng ultimoPunto, Context AppContext, boolean btnStationSelect){
 
         context = AppContext;
+        btnStation = btnStationSelect;
         //http://geoportalgasolineras.es/searchAddress.do?nomProvincia=&nomMunicipio=Barcelona
         // &tipoCarburante=1&rotulo=&tipoVenta=false&nombreVia=&numVia=&codPostal=&economicas=false
         // &tipoBusqueda=0&ordenacion=&posicion=0&yui=true
@@ -55,6 +59,12 @@ public class Ministerio {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            if(btnStation) {
+                progressDialogStation = new ProgressDialog(context);
+                progressDialogStation.setMessage(context.getString(R.string.search_station));
+                progressDialogStation.show();
+            }
         }
 
         @Override
@@ -108,7 +118,18 @@ public class Ministerio {
 
         @Override
         protected void onPostExecute(List<Gasolinera> gasolineras) {
-            ((AppActivity) context).setMarkerStation(gasolineras);
+
+            if(btnStation)
+                progressDialogStation.dismiss();
+
+            if(gasolineras.size() == 0){
+                Toast.makeText(context, R.string.noStation, Toast.LENGTH_LONG).show();
+
+            }else{
+                ((AppActivity) context).setMarkerStation(gasolineras);
+            }
+
+
         }
     }
 
@@ -128,9 +149,8 @@ public class Ministerio {
                 String d = addresses.get(0).getCountryName();*/
 
                 result = addresses.get(0).getSubAdminArea();
-                Toast.makeText(context, result, Toast.LENGTH_LONG).show();
 
-
+                //Toast.makeText(context, result, Toast.LENGTH_LONG).show();
             }
 
         } catch (Exception e) {
