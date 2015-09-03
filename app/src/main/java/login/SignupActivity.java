@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ public class SignupActivity extends Activity{
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    ocultarTeclado();
 
                     signUp();
 
@@ -55,6 +57,7 @@ public class SignupActivity extends Activity{
         // Set up the submit button click handler
         findViewById(R.id.signup_button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                ocultarTeclado();
                 signUp();
             }
 
@@ -120,12 +123,15 @@ public class SignupActivity extends Activity{
                     //Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                     // Sign up didn't succeed. Look at the ParseException
                     // to figure out what went wrong
-                    switch(e.getCode()){
+                    switch (e.getCode()) {
                         case ParseException.USERNAME_TAKEN:
                             Toast.makeText(SignupActivity.this, R.string.username_taken, Toast.LENGTH_LONG).show();
                             break;
+                        case ParseException.CONNECTION_FAILED:
+                            Toast.makeText(SignupActivity.this, R.string.network, Toast.LENGTH_LONG).show();
+                            break;
                         default:
-                            Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(SignupActivity.this, R.string.default_exception, Toast.LENGTH_LONG).show();
                     }
                 } else {
                     // Start an intent for the dispatch activity
@@ -152,6 +158,12 @@ public class SignupActivity extends Activity{
         } else {
             return false;
         }
+    }
+
+    public void ocultarTeclado(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                this.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
 }

@@ -1,6 +1,7 @@
 package garage;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class GarageActivity extends AppCompatActivity {
 
     // RemoteDataTask AsyncTask
     private class RemoteDataTask extends AsyncTask<Void, Void, Void> {
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -124,7 +126,14 @@ public class GarageActivity extends AppCompatActivity {
                 e.printStackTrace();
                 CharSequence datos = "Error: " + e.getMessage();
                 Log.e("Controlador", "ObtenerAlergiasUsuario - " + datos);
-
+                mProgressDialog.dismiss();
+                /*switch (e.getCode()) {
+                    case ParseException.CONNECTION_FAILED:
+                        Toast.makeText(GarageActivity.this, R.string.network, Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(GarageActivity.this, R.string.default_exception, Toast.LENGTH_LONG).show();
+                }*/
             }
 
             return null;

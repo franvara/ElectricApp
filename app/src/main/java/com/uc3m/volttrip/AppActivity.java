@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -77,6 +78,8 @@ public class AppActivity extends AppCompatActivity {
     private TextView durationText;
     private TextView resultado;
     private View clearDestino;
+    private View lupa;
+
 
     private TextView txtVehiculoSelect;
     private FloatingActionButton btnGarage;
@@ -122,13 +125,10 @@ public class AppActivity extends AppCompatActivity {
 
     private boolean distanciaSobrepasada;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
-
-        SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
 
         //Referencia a la nueva toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
@@ -140,6 +140,22 @@ public class AppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 txtPointB.setText("");
+            }
+        });
+
+        lupa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                        locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+                    busqueda();
+
+                } else {
+                    dialogServices();
+                }
+
             }
         });
 
@@ -168,25 +184,48 @@ public class AppActivity extends AppCompatActivity {
         );
 
         btnStations.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
+                                           @Override
+                                           public void onClick(View v) {
 
-                                             btnStationSelect = true;
-                                             Ministerio ministerio = new Ministerio();
-                                             ministerio.buscarGasolineras(new LatLng
-                                                     (myLocation.getLatitude(), myLocation.getLongitude()),
-                                                     AppActivity.this, btnStationSelect);
+                                               if (locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                                                       locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
-                                         }
-                                     }
+                                                   btnStationSelect = true;
+                                                   Ministerio ministerio = new Ministerio();
+                                                   ministerio.buscarGasolineras(new LatLng
+                                                                   (myLocation.getLatitude(), myLocation.getLongitude()),
+                                                           AppActivity.this, btnStationSelect);
+
+
+                                               } else {
+                                                   dialogServices();
+                                               }
+
+
+                                           }
+                                       }
         );
-        initMap();
+
+        initElementswithServices();
+
+    }
+
+    public void initElementswithServices(){
+        if(locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            initMap();
+
+        }else{
+            dialogServices();
+        }
     }
 
     public void initUIElements(){
         //Se define un OnClickListener al botón de Calcular Ruta:
         txtPointB = (TextView) findViewById(R.id.inputDestino);
         clearDestino = findViewById(R.id.clearDestinoButton);
+        lupa = findViewById(R.id.imageViewBuscarMapa);
 
         btnGarage = (FloatingActionButton) findViewById(R.id.buttonGarage);
         btnGarage.setBackgroundTintList(
@@ -248,11 +287,11 @@ public class AppActivity extends AppCompatActivity {
             @Override
             public void onMapClick(LatLng arg0) {
                 ocultarTeclado();
-                if(botones){
+                if (botones) {
                     btnGarage.setVisibility(View.GONE);
                     btnStations.setVisibility(View.GONE);
                     botones = false;
-                }else{
+                } else {
                     btnGarage.setVisibility(View.VISIBLE);
                     btnStations.setVisibility(View.VISIBLE);
                     botones = true;
@@ -260,8 +299,11 @@ public class AppActivity extends AppCompatActivity {
             }
         });
 
+        myLocation = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
         LatLng puntoCentral = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(puntoCentral, 14));
+
     }
 
 
@@ -272,8 +314,17 @@ public class AppActivity extends AppCompatActivity {
         actualizarPref();
         calcularDistancia();
 
+
         if(miVehiculoMarker!=null)
-            miVehiculoMarker.setPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+            if(locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                    locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+                miVehiculoMarker.setPosition(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+
+            }else{
+                dialogServices();
+            }
+
     }
 
 
@@ -612,10 +663,6 @@ public class AppActivity extends AppCompatActivity {
 
             if(marca != "null"){
 
-                SharedPreferences ficha = getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
-
-                //distNum = Integer.parseInt(distanceValue.replaceAll("[\\D]", ""));
-
                 distKm = ((double) distanceValue) / 1000;
                 Calculo calculo = new Calculo(AppActivity.this);
 
@@ -704,6 +751,52 @@ public class AppActivity extends AppCompatActivity {
 
     }
 
+    public void dialogServices(){
+
+        // notify user
+        AlertDialog.Builder dialog = new AlertDialog.Builder(AppActivity.this);
+        dialog.setTitle(getResources().getString(R.string.gps_not_found_title));
+        dialog.setMessage(getResources().getString(R.string.gps_not_found_message));
+        dialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                // TODO Auto-generated method stub
+                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(myIntent, 1);
+                //get gps
+            }
+        });
+        dialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                // TODO Auto-generated method stub
+                initElementswithServices();
+
+            }
+        });
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                //When you touch outside of dialog bounds,
+                //the dialog gets canceled and this method executes.
+
+                if(locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                        locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    dialog.dismiss();
+                }else{
+                    dialog.dismiss();
+                    dialogServices();
+                }
+            }
+        });
+
+
+        AlertDialog alert1 = dialog.create();
+        alert1.show();
+
+    }
+
     //Este método nos trae la información de para qué se llamó la actividad ListaVehiculoActivity,
     //cuál fue el resultado ("OK" o "CANCELED"), y el intent que nos traerá la
     //información que necesitamos de la segunda actividad.
@@ -714,6 +807,22 @@ public class AppActivity extends AppCompatActivity {
         // Comprobamos si el resultado de la segunda actividad es "RESULT_OK".
         if (resultCode == android.app.Activity.RESULT_OK) {
 
+        }
+
+        if (requestCode == 1){ //Comprobación Localización
+            initElementswithServices();
+
+            /*switch (resultCode){
+                case 0:
+                    //GPS not activated
+                    initElementswithServices();
+                    break;
+                case 1:
+                    //GPS activated
+                    initElementswithServices();
+
+                    break;
+            }*/
         }
     }
 
@@ -729,15 +838,77 @@ public class AppActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.options:
+                menuOptions();
+                return true;
 
-        if (id == R.id.log_out) {
-            ParseUser.getCurrentUser().logOut();
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-            return true;
+            case R.id.log_out:
+                ParseUser.getCurrentUser().logOut();
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
     }
+
+    public void menuOptions(){
+
+        AlertDialog menuDialog;
+        final CharSequence[] items = {getString(R.string.avoid_highways),
+                getString(R.string.avoid_tools),getString(R.string.avoid_ferries)};
+        // arraylist to keep the selected items
+        final ArrayList seletedItems=new ArrayList();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.menu_options);
+        builder.setMultiChoiceItems(items, null,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    // indexSelected contains the index of item (of which checkbox checked)
+                    @Override
+                    public void onClick(DialogInterface dialog, int indexSelected,
+                                        boolean isChecked) {
+                        if (isChecked) {
+                            // If the user checked the item, add it to the selected items
+                            // write your code when user checked the checkbox
+                            seletedItems.add(indexSelected);
+                        } else if (seletedItems.contains(indexSelected)) {
+                            // Else, if the item is already in the array, remove it
+                            // write your code when user Uchecked the checkbox
+                            seletedItems.remove(Integer.valueOf(indexSelected));
+                        }
+                    }
+                })
+                // Set the action buttons
+                .setPositiveButton(R.string.menu_close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        //  Your code when user clicked on OK
+                        //  You can write the code  to save the selected item here
+                        seletedItems.add(null);
+                        /*SharedPreferences prefMenu = getSharedPreferences("menu", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editorMenu = prefMenu.edit();
+                        editorMenu.putBoolean("autopista", true);
+                        editorMenu.putBoolean("peaje", true);
+                        editorMenu.putBoolean("ferris",true);
+                        editorMenu.commit();*/
+
+
+                    }
+                })
+                .setNegativeButton(R.string.menu_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        //  Your code when user clicked on Cancel
+
+                    }
+                });
+
+        menuDialog = builder.create();//AlertDialog dialog; create like this outside onClick
+        menuDialog.show();
+    }
+
 }

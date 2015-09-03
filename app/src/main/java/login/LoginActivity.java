@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class LoginActivity extends Activity{
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    ocultarTeclado();
 
                     login();
 
@@ -52,6 +54,7 @@ public class LoginActivity extends Activity{
 
         findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                ocultarTeclado();
                 login();
             }
         });
@@ -104,14 +107,15 @@ public class LoginActivity extends Activity{
                 if (e != null) {
                     // Show the error message
                     //Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    switch(e.getCode()){
-                        case ParseException.USERNAME_TAKEN:
-                            break;
+                    switch (e.getCode()) {
                         case ParseException.OBJECT_NOT_FOUND:
                             Toast.makeText(LoginActivity.this, R.string.object_not_found, Toast.LENGTH_LONG).show();
                             break;
+                        case ParseException.CONNECTION_FAILED:
+                            Toast.makeText(LoginActivity.this, R.string.network, Toast.LENGTH_LONG).show();
+                            break;
                         default:
-                            Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, R.string.default_exception, Toast.LENGTH_LONG).show();
                     }
                 } else {
                     // Start an intent for the main activity
@@ -121,6 +125,12 @@ public class LoginActivity extends Activity{
                 }
             }
         });
+    }
+
+    public void ocultarTeclado(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                this.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
 

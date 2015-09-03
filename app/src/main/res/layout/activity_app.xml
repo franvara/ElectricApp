@@ -52,7 +52,6 @@
                             android:clickable="true"
                             android:background="@android:color/white"
                             android:padding="5dp"
-                            android:onClick="busquedaLupa"
                             />
 
                     </LinearLayout>
@@ -204,7 +203,8 @@
                 app:borderWidth="0dp"
                 android:layout_alignBottom="@id/linear_contenedor"
                 android:layout_alignParentLeft="true"
-                android:layout_marginBottom="35dp"/>
+                android:layout_marginBottom="35dp"
+                android:layout_marginLeft="5dp"/>
 
             <!--Stations button-->
             <android.support.design.widget.FloatingActionButton
@@ -216,7 +216,8 @@
                 app:borderWidth="0dp"
                 android:layout_alignBottom="@id/linear_contenedor"
                 android:layout_alignParentLeft="true"
-                android:layout_marginBottom="96dp"/>
+                android:layout_marginBottom="96dp"
+                android:layout_marginLeft="5dp"/>
 
 
         </RelativeLayout>
