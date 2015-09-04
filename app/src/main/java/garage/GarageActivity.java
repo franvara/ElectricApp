@@ -127,13 +127,19 @@ public class GarageActivity extends AppCompatActivity {
                 CharSequence datos = "Error: " + e.getMessage();
                 Log.e("Controlador", "ObtenerAlergiasUsuario - " + datos);
                 mProgressDialog.dismiss();
-                /*switch (e.getCode()) {
+                switch (e.getCode()) {
                     case ParseException.CONNECTION_FAILED:
-                        Toast.makeText(GarageActivity.this, R.string.network, Toast.LENGTH_LONG).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(GarageActivity.this, R.string.network, Toast.LENGTH_LONG).show();
+                            }
+                        });
+
                         break;
                     default:
                         Toast.makeText(GarageActivity.this, R.string.default_exception, Toast.LENGTH_LONG).show();
-                }*/
+                }
             }
 
             return null;

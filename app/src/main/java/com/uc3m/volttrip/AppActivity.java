@@ -331,14 +331,8 @@ public class AppActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
-        //locManager.removeUpdates(locListener);
+        locManager.removeUpdates(locListener);
     }
-
-    public void busquedaLupa(View view){
-        busqueda();
-    }
-
 
     public void busqueda(){
         //Obtenemos la dirección A y B obtenida por el usuario.
@@ -781,10 +775,10 @@ public class AppActivity extends AppCompatActivity {
                 //When you touch outside of dialog bounds,
                 //the dialog gets canceled and this method executes.
 
-                if(locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                if (locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
                         locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     dialog.dismiss();
-                }else{
+                } else {
                     dialog.dismiss();
                     dialogServices();
                 }
