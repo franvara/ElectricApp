@@ -34,6 +34,9 @@
     <string name="yes">Sí</string>
     <string name="no">No</string>
 
+    <string name="app_exit">Está consultando una ruta. ¿Desea salir de la aplicación?</string>
+
+
     <string name="menu_options">Opciones</string>
     <string name="avoid_highways">Evitar autopistas</string>
     <string name="avoid_tools">Evitar peajes</string>

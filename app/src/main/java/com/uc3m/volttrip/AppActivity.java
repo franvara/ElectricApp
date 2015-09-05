@@ -331,7 +331,43 @@ public class AppActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        locManager.removeUpdates(locListener);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(info.getVisibility() == View.VISIBLE){
+            final AlertDialog.Builder dialogExit = new AlertDialog.Builder(AppActivity.this);
+            dialogExit.setMessage(getResources().getString(R.string.app_exit));
+            dialogExit.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                    locManager.removeUpdates(locListener);
+                    AppActivity.this.finish();
+                }
+            });
+            dialogExit.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                    paramDialogInterface.dismiss();
+                }
+            });
+
+
+            AlertDialog alert1 = dialogExit.create();
+            alert1.show();
+        }else {
+            super.onBackPressed();
+            locManager.removeUpdates(locListener);
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public void busqueda(){
