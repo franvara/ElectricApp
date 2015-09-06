@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.parse.ParseUser;
-import com.uc3m.volttrip.AppActivity;
+import com.uc3m.etrip.AppActivity;
 
 public class MainActivity extends Activity{
 

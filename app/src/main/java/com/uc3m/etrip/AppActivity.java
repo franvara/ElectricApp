@@ -1,4 +1,4 @@
-package com.uc3m.volttrip;
+package com.uc3m.etrip;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -44,30 +42,18 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import com.parse.ParseUser;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import garage.GarageActivity;
 import login.MainActivity;
@@ -372,9 +358,9 @@ public class AppActivity extends AppCompatActivity {
         } else {
             String avoid = restrictions();
             PeticionJSON peticion = new PeticionJSON();
-            peticion.execute("http://maps.googleapis.com/maps/api/directions/json?origin="
+            peticion.execute("https://maps.googleapis.com/maps/api/directions/json?origin="
                     + (pointA).replace(" ", "+") + "&destination=" +
-                    (pointB).replace(" ", "+") + "&sensor=false&mode=driving"
+                    (pointB).replace(" ", "+") + "&mode=driving"
                     + "&avoid=" + avoid + "&region=es&language=es");
         }
         ocultarTeclado();

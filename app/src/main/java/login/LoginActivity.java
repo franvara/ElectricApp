@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.uc3m.volttrip.R;
+import com.uc3m.etrip.R;
 
 public class LoginActivity extends Activity{
 

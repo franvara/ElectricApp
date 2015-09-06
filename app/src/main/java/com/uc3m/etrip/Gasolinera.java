@@ -1,4 +1,4 @@
-package com.uc3m.volttrip;
+package com.uc3m.etrip;
 
 import com.google.android.gms.maps.model.LatLng;
 

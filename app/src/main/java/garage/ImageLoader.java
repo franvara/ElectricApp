@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.widget.ImageView;
 
-import com.uc3m.volttrip.R;
+import com.uc3m.etrip.R;
 
 import java.io.File;
 import java.io.FileInputStream;

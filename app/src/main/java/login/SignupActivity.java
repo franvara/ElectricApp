@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-import com.uc3m.volttrip.R;
+import com.uc3m.etrip.R;
 
 public class SignupActivity extends Activity{
     private EditText usernameView;

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VoltTrip</string>
+    <string name="app_name">eTrip</string>
 
     <!-- Login -->
     <string name="userLog">Usuario</string>

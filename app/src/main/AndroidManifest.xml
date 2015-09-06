@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.uc3m.volttrip" >
+    package="com.uc3m.etrip" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,18 +16,18 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:name="com.uc3m.volttrip.ParseApplication" >
+        android:name="com.uc3m.etrip.ParseApplication" >
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyARkB-CztKDllGEjSfDtynmgEZutIkrMX8" />
+            android:value="AIzaSyC8-J_wzGCefimTcYlsNvNAzaSLo2Qwhk8" />
 
-        <!--App PRO: AIzaSyAWCNuSceqiAPGVPcs23qe1pL4qpBVz1Do
-        SHA1: 54:B3:5E:90:63:7B:87:99:82:81:81:26:88:27:E3:5C:2A:50:73:78-->
-        <!--MAC_Debug: AIzaSyARkB-CztKDllGEjSfDtynmgEZutIkrMX8
+        <!--App PRO: AIzaSyDYhJvsS_f0cJQEGkpAEkZWOzSKZ8tjViE
+        SHA1: C5:D4:22:52:67:4F:C9:9A:D6:27:04:B2:7C:47:34:E6:15:71:A3:09-->
+        <!--MAC_Debug: AIzaSyC8-J_wzGCefimTcYlsNvNAzaSLo2Qwhk8
         SHA1: 84:75:F1:E3:3E:23:62:BB:63:04:CD:C5:CA:62:E9:1D:87:39:0B:D9-->
-        <!--UNISYS_Debug: AIzaSyB_SCuqoCm2odCXaY6Yu3gP1SGNc6iNDcA
-        SHA1: 83:23:C9:2A:C0:47:9A:97:0F:C0:DA:C7:E5:A1:02:02:31:41:F5:F6;com.fran.electricapp-->
+        <!--UNISYS_Debug: AIzaSyD06fd9JVgOVi7Ug7q-llGztK1Sp_55yhU
+        SHA1: 83:23:C9:2A:C0:47:9A:97:0F:C0:DA:C7:E5:A1:02:02:31:41:F5:F6-->
 
         <activity
             android:name="login.MainActivity"
@@ -55,7 +55,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.uc3m.volttrip.AppActivity"
+            android:name="com.uc3m.etrip.AppActivity"
             android:label="@string/app_name"
             android:configChanges="screenSize|orientation|keyboard"
             android:screenOrientation="portrait"/>
