@@ -58,6 +58,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -329,11 +331,6 @@ public class AppActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onBackPressed() {
         if(info.getVisibility() == View.VISIBLE){
             final AlertDialog.Builder dialogExit = new AlertDialog.Builder(AppActivity.this);
@@ -365,11 +362,6 @@ public class AppActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
     public void busqueda(){
         //Obtenemos la dirección A y B obtenida por el usuario.
         String pointA = myLocation.getLatitude() + " " + myLocation.getLongitude();
@@ -378,10 +370,12 @@ public class AppActivity extends AppCompatActivity {
         if (pointB.equals("")) {
             Toast.makeText(AppActivity.this, R.string.campos_obligatorios, Toast.LENGTH_LONG).show();
         } else {
+            String avoid = restrictions();
             PeticionJSON peticion = new PeticionJSON();
             peticion.execute("http://maps.googleapis.com/maps/api/directions/json?origin="
                     + (pointA).replace(" ", "+") + "&destination=" +
-                    (pointB).replace(" ", "+") + "&sensor=false&mode=driving");
+                    (pointB).replace(" ", "+") + "&sensor=false&mode=driving"
+                    + "&avoid=" + avoid + "&region=es&language=es");
         }
         ocultarTeclado();
 
@@ -827,6 +821,36 @@ public class AppActivity extends AppCompatActivity {
 
     }
 
+    public String restrictions(){
+
+        String restriction = "";
+        final SharedPreferences prefMenu = getSharedPreferences("menu", Context.MODE_PRIVATE);
+
+        int i = 0;
+
+        if(prefMenu.getBoolean("autopista", false)){
+            restriction += "highways";
+            i++;
+        }
+
+        if(prefMenu.getBoolean("peaje", false)){
+
+            if(i>0) restriction += "%7C";
+
+            i++;
+            restriction += "tolls";
+        }
+
+        if(prefMenu.getBoolean("ferri", false)){
+
+            if(i>0) restriction += "%7C";
+
+            restriction +="ferries";
+        }
+
+        return restriction;
+    }
+
     //Este método nos trae la información de para qué se llamó la actividad ListaVehiculoActivity,
     //cuál fue el resultado ("OK" o "CANCELED"), y el intent que nos traerá la
     //información que necesitamos de la segunda actividad.
@@ -892,10 +916,16 @@ public class AppActivity extends AppCompatActivity {
                 getString(R.string.avoid_tools),getString(R.string.avoid_ferries)};
         // arraylist to keep the selected items
         final ArrayList seletedItems=new ArrayList();
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.menu_options);
-        builder.setMultiChoiceItems(items, null,
+
+        final SharedPreferences prefMenu = getSharedPreferences("menu", Context.MODE_PRIVATE);
+        final boolean [] evitar = new  boolean[3];
+        evitar[0] = prefMenu.getBoolean("autopista", false);
+        evitar[1] = prefMenu.getBoolean("peaje", false);
+        evitar[2] = prefMenu.getBoolean("ferri", false);
+
+        builder.setMultiChoiceItems(items, evitar,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     // indexSelected contains the index of item (of which checkbox checked)
                     @Override
@@ -905,10 +935,14 @@ public class AppActivity extends AppCompatActivity {
                             // If the user checked the item, add it to the selected items
                             // write your code when user checked the checkbox
                             seletedItems.add(indexSelected);
-                        } else if (seletedItems.contains(indexSelected)) {
-                            // Else, if the item is already in the array, remove it
-                            // write your code when user Uchecked the checkbox
-                            seletedItems.remove(Integer.valueOf(indexSelected));
+                            evitar[indexSelected] = true;
+                        } else {
+                            evitar[indexSelected] = false;
+                            if (seletedItems.contains(indexSelected)) {
+                                // Else, if the item is already in the array, remove it
+                                // write your code when user Uchecked the checkbox
+                                seletedItems.remove(Integer.valueOf(indexSelected));
+                            }
                         }
                     }
                 })
@@ -918,13 +952,27 @@ public class AppActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         //  Your code when user clicked on OK
                         //  You can write the code  to save the selected item here
-                        seletedItems.add(null);
-                        /*SharedPreferences prefMenu = getSharedPreferences("menu", Context.MODE_PRIVATE);
+
                         SharedPreferences.Editor editorMenu = prefMenu.edit();
-                        editorMenu.putBoolean("autopista", true);
-                        editorMenu.putBoolean("peaje", true);
-                        editorMenu.putBoolean("ferris",true);
-                        editorMenu.commit();*/
+
+                        for(int i=0; i < evitar.length; i++){
+
+                            switch (i){
+                                case 0:
+                                    if(evitar[0]) editorMenu.putBoolean("autopista", true);
+                                    else editorMenu.putBoolean("autopista", false);
+                                    break;
+                                case 1:
+                                    if(evitar[1]) editorMenu.putBoolean("peaje", true);
+                                    else editorMenu.putBoolean("peaje", false);
+                                    break;
+                                case 2:
+                                    if(evitar[2]) editorMenu.putBoolean("ferri",true);
+                                    else editorMenu.putBoolean("ferri",false);
+                                    break;
+                            }
+                        }
+                        editorMenu.commit();
 
 
                     }
