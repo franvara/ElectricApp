@@ -632,8 +632,10 @@ public class AppActivity extends AppCompatActivity {
         LatLng latLngInicio = new LatLng(latitudes[0], longitudes[0]);
         LatLng latLngFin = new LatLng(latitudes[latitudes.length - 1], longitudes[longitudes.length - 1]);
 
-        mMap.addMarker(new MarkerOptions().position(latLngInicio));
-        mMap.addMarker(new MarkerOptions().position(latLngFin));
+        mMap.addMarker(new MarkerOptions().position(latLngInicio)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_flag_start)));
+        mMap.addMarker(new MarkerOptions().position(latLngFin)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_flag_end)));
 
         // Añadimos un marcador con posición, título, icono y descripción.
         miVehiculoMarker = mMap.addMarker(new MarkerOptions().position(latLngInicio)
@@ -746,8 +748,9 @@ public class AppActivity extends AppCompatActivity {
         ArrayList<LatLng> StationList = new ArrayList<>();
 
         for(Gasolinera gasolinera:result){
-            mMap.addMarker(new MarkerOptions().position(gasolinera.getlatLong()).
-                            title(gasolinera.getInfo())
+            mMap.addMarker(new MarkerOptions().position(gasolinera.getlatLong())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_station))
+                            .title(gasolinera.getInfo())
             );
 
             StationList.add(gasolinera.getlatLong());
