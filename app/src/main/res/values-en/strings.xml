@@ -2,8 +2,8 @@
     <string name="app_name">eTrip</string>
 
     <!-- Login -->
-    <string name="userLog">Usuario</string>
-    <string name="passwordLog">Contraseña</string>
+    <string name="userLog">User</string>
+    <string name="passwordLog">Password</string>
     <string name="passwordLog2">Repita la contraseña</string>
     <string name="login">Iniciar sesión</string>
     <string name="noAccount">¿Sin cuenta todavía? !Regístrate!</string>

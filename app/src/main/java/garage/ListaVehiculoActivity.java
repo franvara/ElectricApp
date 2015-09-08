@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -88,6 +89,19 @@ public class ListaVehiculoActivity extends ActionBarActivity {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
                 mProgressDialog.dismiss();
+                switch (e.getCode()) {
+                    case ParseException.CONNECTION_FAILED:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(ListaVehiculoActivity.this, R.string.network, Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                        break;
+                    default:
+                        Toast.makeText(ListaVehiculoActivity.this, R.string.default_exception, Toast.LENGTH_LONG).show();
+                }
             }
             return null;
         }

@@ -9,6 +9,11 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/info_app"
+        android:title="@string/menu_info"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/log_out"
         android:title="@string/log_out"
         app:showAsAction="never" />

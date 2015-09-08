@@ -188,7 +188,7 @@ public class GarageAdapter extends BaseAdapter {
                         row.delete();
                         //row.saveInBackground();
                         resultado = true;
-                        Toast.makeText(context, "Vehículo eliminado", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.garage_deleted, Toast.LENGTH_LONG).show();
                     }
                     if(objectId.equals(idAntiguo)){
                         SharedPreferences prefs = context.getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
@@ -196,14 +196,14 @@ public class GarageAdapter extends BaseAdapter {
                     }
                 }
             }else{
-                Toast.makeText(context, "Vehículo no encontrado", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.garage_nofound, Toast.LENGTH_LONG).show();
 
             }
 
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Toast.makeText(context, "Hemos tenido una avería en el garage", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.network, Toast.LENGTH_LONG).show();
         }
 
         return resultado;

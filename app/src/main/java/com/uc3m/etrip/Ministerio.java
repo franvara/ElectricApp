@@ -122,10 +122,12 @@ public class Ministerio {
             if(btnStation)
                 progressDialogStation.dismiss();
 
-            if(gasolineras.size() == 0){
-                Toast.makeText(context, R.string.noStation, Toast.LENGTH_LONG).show();
+            if(gasolineras == null){
+                Toast.makeText(context, R.string.network, Toast.LENGTH_LONG).show();
 
             }else{
+                if(gasolineras.size()== 0) Toast.makeText(context, R.string.noStation, Toast.LENGTH_LONG).show();
+                else
                 ((AppActivity) context).setMarkerStation(gasolineras);
             }
 

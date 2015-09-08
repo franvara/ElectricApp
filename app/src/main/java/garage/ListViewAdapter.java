@@ -131,23 +131,11 @@ public class ListViewAdapter extends BaseAdapter {
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
+                    Toast.makeText(context, R.string.network, Toast.LENGTH_LONG).show();
                 }
 
                 //Cerramos la activity y retornamos el poder a la activity para que actúe
                 Intent i = ((Activity)context).getIntent();
-
-                /*id = vehiclelist.get(position).getIdVehiculo();
-                marca = vehiclelist.get(position).getMarca();
-                modelo = vehiclelist.get(position).getModelo();
-                autonomia = vehiclelist.get(position).getAutonomia();
-
-                //Cerramos la activity y retornamos el poder a la activity para que actúe
-                Intent i = ((Activity)context).getIntent();
-
-                //Devolvemos los datos que ha introducido el usuario delegando la tarea
-                i.putExtra("marca", marca);
-                i.putExtra("modelo", modelo);
-                i.putExtra("autonomia", autonomia);*/
 
                 //Cerramos la pantalla indicando que ha ido bien
                 ((Activity)context).setResult(result, i);

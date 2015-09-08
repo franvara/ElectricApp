@@ -474,6 +474,7 @@ public class AppActivity extends AppCompatActivity {
                     Ministerio ministerio = new Ministerio();
                     if(puntoSinBat != null && marca != "null"){
                         mMap.addMarker(new MarkerOptions().position(puntoSinBat)
+                                .title(getString(R.string.marker_bat))
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_off)));
                         ministerio.buscarGasolineras(puntoSinBat, AppActivity.this, btnStationSelect);
 
@@ -521,6 +522,13 @@ public class AppActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(AppActivity.this, R.string.network, Toast.LENGTH_LONG).show();
+                }
+            });
+            progressDialog.dismiss();
         }
         return stringBuilder.toString();
     }
@@ -621,7 +629,7 @@ public class AppActivity extends AppCompatActivity {
 
         mMap.clear(); //Borra la ruta al suspenderse la actividad, para que no pinte varias rutas.
 
-        rectOptions = new PolylineOptions();
+        rectOptions = new PolylineOptions().color(0xFF303F9F);
 
         for (int i = 0; i < latitudes.length; i++) {
             rectOptions.add(new LatLng(latitudes[i], longitudes[i]));
@@ -633,8 +641,10 @@ public class AppActivity extends AppCompatActivity {
         LatLng latLngFin = new LatLng(latitudes[latitudes.length - 1], longitudes[longitudes.length - 1]);
 
         mMap.addMarker(new MarkerOptions().position(latLngInicio)
+                .title(getString(R.string.marker_inicio))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_flag_start)));
         mMap.addMarker(new MarkerOptions().position(latLngFin)
+                .title(getString(R.string.marker_final))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_flag_end)));
 
         // Añadimos un marcador con posición, título, icono y descripción.
@@ -854,18 +864,6 @@ public class AppActivity extends AppCompatActivity {
 
         if (requestCode == 1){ //Comprobación Localización
             initElementswithServices();
-
-            /*switch (resultCode){
-                case 0:
-                    //GPS not activated
-                    initElementswithServices();
-                    break;
-                case 1:
-                    //GPS activated
-                    initElementswithServices();
-
-                    break;
-            }*/
         }
     }
 
@@ -884,6 +882,10 @@ public class AppActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.options:
                 menuOptions();
+                return true;
+
+            case R.id.info_app:
+                startActivity(new Intent(this, InfoActivity.class));
                 return true;
 
             case R.id.log_out:
