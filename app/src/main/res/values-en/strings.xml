@@ -4,81 +4,78 @@
     <!-- Login -->
     <string name="userLog">User</string>
     <string name="passwordLog">Password</string>
-    <string name="passwordLog2">Repita la contraseña</string>
-    <string name="login">Iniciar sesión</string>
-    <string name="noAccount">¿Sin cuenta todavía? !Regístrate!</string>
-    <string name="yesAccount">¿Ya eres miembro? Inicia sesión</string>
-    <string name="error_intro">"Por favor, "</string>
-    <string name="error_blank_username">introduzca su nombre de usuario</string>
-    <string name="error_join">" e "</string>
-    <string name="error_blank_password">introduzca su contraseña</string>
+    <string name="passwordLog2">Repeat password</string>
+    <string name="login">Log in</string>
+    <string name="noAccount">No account yet? Sign up!</string>
+    <string name="yesAccount">Already a member? Log in</string>
+    <string name="error_intro">"Please, "</string>
+    <string name="error_blank_username">enter your user name</string>
+    <string name="error_join">" and "</string>
+    <string name="error_blank_password">enter your password</string>
     <string name="error_end">.</string>
-    <string name="log_out">Cerrar sesión</string>
-    <string name="error_mismatched_passwords">introduzca la contraseña otra vez</string>
-    <string name="user_name_token">Lo sentimos, ese nombre de usuario ya existe.</string>
-    <string name="object_not_found">Lo sentimos, esos credenciales son incorrectos.</string>
-    <string name="username_taken">Lo sentimos, este nombre de usuario ya ha sido elegido.</string>
+    <string name="log_out">Log out</string>
+    <string name="error_mismatched_passwords">enter the password again</string>
+    <string name="user_name_token">Sorry, that username already exists.</string>
+    <string name="object_not_found">Sorry, these credentials are incorrect.</string>
+    <string name="username_taken">Sorry, this username has already been chosen.</string>
 
 
     <!-- App -->
-    <string name="destino">Destino</string>
-    <string name="posición_actual">Posición actual</string>
-    <string name="marker_inicio">Inicio ruta</string>
-    <string name="marker_final">Fin ruta</string>
-    <string name="marker_bat">Batería agotada</string>
+    <string name="destino">Destination</string>
+    <string name="posición_actual">Present position</string>
+    <string name="marker_inicio">Start</string>
+    <string name="marker_final">End</string>
+    <string name="marker_bat">Low battery</string>
 
-    <string name="noStation">Lo sentimos, no hemos encontrado puntos de recarga cercanos.</string>
-    <string name="calculating">Calculando ruta...</string>
-    <string name="search_station">Buscando puntos de recarga cercanos.</string>
+    <string name="noStation">Sorry, we could not find charging points nearby.</string>
+    <string name="calculating">Calculating route ...</string>
+    <string name="search_station">Looking nearby charging stations.</string>
 
-    <string name="campos_obligatorios">Por favor, introduza un destino.</string>
+    <string name="campos_obligatorios">Please enter a destination.</string>
 
-    <string name="gps_not_found_title">Localización no activada</string>
-    <string name="gps_not_found_message">Necesita su localización para usar la aplicación ¿Quiere habilitarla?</string>
-    <string name="yes">Sí</string>
+    <string name="gps_not_found_title">Location not set</string>
+    <string name="gps_not_found_message">Location need to use the application, want enable it?</string>
+    <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <string name="app_exit">Está consultando una ruta. ¿Desea salir de la aplicación?</string>
+    <string name="app_exit">you are consulting a route. Do you want to exit the application?</string>
 
 
-    <string name="menu_options">Opciones</string>
-    <string name="avoid_highways">Evitar autopistas</string>
-    <string name="avoid_tools">Evitar peajes</string>
-    <string name="avoid_ferries">Evitar ferris</string>
-    <string name="menu_cancel">CANCELAR</string>
-    <string name="menu_close">CERRAR</string>
+    <string name="menu_options">Options</string>
+    <string name="avoid_highways">Avoid highways</string>
+    <string name="avoid_tools">Avoid tools</string>
+    <string name="avoid_ferries">Avoid ferries</string>
+    <string name="menu_cancel">CANCEL</string>
+    <string name="menu_close">CLOSE</string>
 
     <string name="hours"> h </string>
     <string name="minutes"> min</string>
 
     <!-- Informacion app -->
-    <string name="info_name">Acerca de...</string>
-    <string name="info_app">eTrip es un trabajo de fin de grado realizado por Francisco Vara para la
-        Universidad Carlos III de Madrid en el año 2015 bajo el nombre de "Sistema de navegación y gestión de rutas para vehículos eléctricos en Android". Para la obtención de puntos
-        de recarga se han utilizado los datos del Plan Movele del Ministerio. Estos puntos son
-        de uso gratuito dentro del Plan Movele 2015, el cual además proporciona ayudas para la
-        compra de este tipo de transporte.</string>
-    <string name="menu_info">Acerca de...</string>
+    <string name="info_name">About...</string>
+    <string name="info_app">eTrip is a work degree by Francisco Vara to Universidad Carlos III de Madrid in 2015 under the name of "Navigation system and route management for electric vehicles in Android.
+    To obtain charging points have used data from Ministry Movele Plan. These points are free of charge within the Movele 2015 Plan, which also provides grants for the purchase of this type of transport.</string>
+    <string name="menu_info">About...</string>
 
 
     <!-- Garage -->
-    <string name="garage_name">GARAJE</string>
-    <string name="action_añadir">Añadir</string>
-    <string name="load">Cargando...</string>
-    <string name="garage_empty">SU GARAGE ESTÁ VACÍO, SELECCIONE UN VEHÍCULO</string>
-    <string name="garage_deleted">Vehículo eliminado</string>
-    <string name="garage_nofound">Vehículo no encontrado</string>
+    <string name="garage_name">GARAGE</string>
+    <string name="action_añadir">Add</string>
+    <string name="load">Load...</string>
+    <string name="garage_empty">YOUR GARAGE IS EMPTY, SELECT A VEHICLE</string>
+    <string name="garage_deleted">Vehicle removed</string>
+    <string name="garage_nofound">Vehicle not found</string>
 
 
 
 
 
     <!-- Dealer -->
-    <string name="dealer_name">CONCESIONARIO</string>
+    <string name="dealer_name">DEALER</string>
 
     <!-- Exceptions -->
-    <string name="network">Hubo un problema con la conexión a internet, por favor inténtelo más tarde</string>
-    <string name="default_exception">Hubo un problema en la aplicación, por favor inténtelo más tarde</string>
+    <string name="network">There was a problem with the internet connection, please try again later</string>
+    <string name="default_exception">There was a problem with the application, please try again later</string>
 
 
 </resources>

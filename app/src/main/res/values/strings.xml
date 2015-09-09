@@ -31,7 +31,7 @@
     <string name="calculating">Calculando ruta...</string>
     <string name="search_station">Buscando puntos de recarga cercanos.</string>
 
-    <string name="campos_obligatorios">Por favor, introduza un destino.</string>
+    <string name="campos_obligatorios">Por favor, introduzca un destino.</string>
 
     <string name="gps_not_found_title">Localización no activada</string>
     <string name="gps_not_found_message">Necesita su localización para usar la aplicación ¿Quiere habilitarla?</string>
