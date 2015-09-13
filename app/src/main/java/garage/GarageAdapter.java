@@ -38,6 +38,7 @@ public class GarageAdapter extends BaseAdapter {
     private String id;
     private String marca;
     private String modelo;
+    private String km;
     private int autonomia;
     private int bateria;
 
@@ -55,6 +56,7 @@ public class GarageAdapter extends BaseAdapter {
     public class ViewHolder {
         TextView marca;
         TextView modelo;
+        TextView km;
         ImageView image;
     }
 
@@ -83,6 +85,7 @@ public class GarageAdapter extends BaseAdapter {
             // Locate the TextViews in listview_item.xml
             holder.marca = (TextView) view.findViewById(R.id.marca);
             holder.modelo = (TextView) view.findViewById(R.id.modelo);
+            holder.km = (TextView) view.findViewById(R.id.autonomia);
             // Locate the ImageView in listview_item.xml
             holder.image = (ImageView) view.findViewById(R.id.image);
             view.setTag(holder);
@@ -92,7 +95,8 @@ public class GarageAdapter extends BaseAdapter {
         // Set the results into TextViews
         holder.marca.setText(garagelist.get(position).getMarca());
         holder.modelo.setText(garagelist.get(position).getModelo());
-
+        holder.km.setText(view.getResources().getString(R.string.range) +
+                Integer.toString(garagelist.get(position).getAutonomia())+ " km");
 
         SharedPreferences ficha = context.getSharedPreferences("fichaGarage", Context.MODE_PRIVATE);
         idAntiguo = ficha.getString("id", "null");

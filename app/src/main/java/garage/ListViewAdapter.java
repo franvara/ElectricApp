@@ -55,6 +55,7 @@ public class ListViewAdapter extends BaseAdapter {
     public class ViewHolder {
         TextView marca;
         TextView modelo;
+        TextView km;
         ImageView image;
     }
 
@@ -81,6 +82,7 @@ public class ListViewAdapter extends BaseAdapter {
             // Locate the TextViews in listview_item.xml
             holder.marca = (TextView) view.findViewById(R.id.marca);
             holder.modelo = (TextView) view.findViewById(R.id.modelo);
+            holder.km = (TextView) view.findViewById(R.id.autonomia);
             // Locate the ImageView in listview_item.xml
             holder.image = (ImageView) view.findViewById(R.id.image);
             view.setTag(holder);
@@ -90,6 +92,10 @@ public class ListViewAdapter extends BaseAdapter {
         // Set the results into TextViews
         holder.marca.setText(vehiclelist.get(position).getMarca());
         holder.modelo.setText(vehiclelist.get(position).getModelo());
+
+        holder.km.setText(view.getResources().getString(R.string.range) +
+                Integer.toString(vehiclelist.get(position).getAutonomia())+ " km");
+
         // Set the results into ImageView
         imageLoader.DisplayImage(vehiclelist.get(position).getImage(),
                 holder.image);

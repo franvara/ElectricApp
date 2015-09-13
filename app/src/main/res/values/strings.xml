@@ -65,9 +65,11 @@
     <string name="garage_name">GARAJE</string>
     <string name="action_añadir">Añadir</string>
     <string name="load">Cargando...</string>
-    <string name="garage_empty">SU GARAGE ESTÁ VACÍO, SELECCIONE UN VEHÍCULO</string>
+    <string name="garage_empty">SU GARAJE ESTÁ VACÍO, SELECCIONE UN VEHÍCULO</string>
     <string name="garage_deleted">Vehículo eliminado</string>
     <string name="garage_nofound">Vehículo no encontrado</string>
+    <string name="range">Autonomía: </string>
+
 
 
 

@@ -697,8 +697,8 @@ public class AppActivity extends AppCompatActivity {
                     resultado.setTextColor(Color.BLACK);
                 }
                 else if(gasto >0 && gasto <=60) resultado.setTextColor(Color.GREEN);
-                else if(gasto >60 && gasto <100) resultado.setTextColor(getResources().getColor(R.color.Lime));
-                else if(gasto >=100) resultado.setTextColor(Color.RED);
+                else if(gasto >60 && gasto <90) resultado.setTextColor(getResources().getColor(R.color.Lime));
+                else if(gasto >=90) resultado.setTextColor(Color.RED);
 
             }else{
                 resultado.setText("-");

@@ -65,7 +65,7 @@
     <string name="garage_empty">YOUR GARAGE IS EMPTY, SELECT A VEHICLE</string>
     <string name="garage_deleted">Vehicle removed</string>
     <string name="garage_nofound">Vehicle not found</string>
-
+    <string name="range">Range: </string>
 
 
 
